@@ -60,6 +60,7 @@
     ],
     "globals": {
       "ts-jest": {
+        "tsConfigFile": "tsconfig.json",
         "skipBabel": true
       }
     }

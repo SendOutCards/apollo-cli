@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Typescript newCodeGeneration duplicates 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration duplicates 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration fragment spreads with inline fragments 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration fragment spreads with inline fragments 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration fragment with fragment spreads 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration fragment with fragment spreads 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration fragment with fragment spreads with inline fragment 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration fragment with fragment spreads with inline fragment 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration handles multiline graphql comments 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration handles multiline graphql comments 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration inline fragment 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration inline fragment 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration inline fragment on type conditions 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration inline fragment on type conditions 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration inline fragment on type conditions with differing inner fields 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration inline fragment on type conditions with differing inner fields 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration multiple nested list enum 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration multiple nested list enum 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration multiple nested non-null list enum 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration multiple nested non-null list enum 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration query with fragment spreads 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration query with fragment spreads 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration simple fragment 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration simple fragment 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration simple hero query 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration simple hero query 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
+
+exports[`Typescript newCodeGeneration simple mutation 1`] = `Array []`;
+
+exports[`Typescript newCodeGeneration simple mutation 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "",
+}
+`;
