@@ -1,113 +1,642 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Typescript newCodeGeneration duplicates 1`] = `Array []`;
+exports[`Typescript newCodeGeneration duplicates 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "../../__generated__/globalTypes",
+    },
+    "fileName": "duplicates.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration duplicates 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "export enum EnumCommentTestCase {
+  first = \\"first\\",
+  second = \\"second\\",
+}
+
+export type Duplicate = {
+  propA: EnumCommentTestCase;
+  propB: EnumCommentTestCase[];
+};
+
+export const Duplicate = (propA: EnumCommentTestCase, propB: EnumCommentTestCase[]) => ({
+  propA,
+  propB
+});
+
+import duplicatesRawString from \\"../GraphQL request\\";
+
+export type duplicates = {
+  duplicates: {
+    propA: EnumCommentTestCase[][];
+    propB: Maybe<Maybe<Maybe<EnumCommentTestCase>[]>[]>;
+  };
+};
+
+export const duplicates = (a: EnumCommentTestCase, b: EnumCommentTestCase, c: Duplicate) => ({
+  query: rawduplicates,
+  variables: {
+    a,
+    b,
+    c
+  }
+});
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration fragment spreads with inline fragments 1`] = `Array []`;
+exports[`Typescript newCodeGeneration fragment spreads with inline fragments 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "GraphQL request
+/some/file/ComponentA.tsx
+/__generated__/globalTypes.ts
+../../__generated__/globalTypes",
+    },
+    "fileName": "HumanFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "GraphQL request
+/some/file/ComponentA.tsx
+/__generated__/globalTypes.ts
+../../__generated__/globalTypes",
+    },
+    "fileName": "DroidFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "../../__generated__/globalTypes",
+    },
+    "fileName": "HeroName.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration fragment spreads with inline fragments 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
+
+import humanFragmentRawString from \\"../GraphQL request\\";
+
+import { Maybe } from \\"../__generated__/globalTypes\\";
+
+export type HumanFragment = {
+  homePlanet: Maybe<string>;
+  friends: Maybe<Maybe<(If<\\"Human\\", {
+    name: string;
+  }> | If<\\"Droid\\", {
+    id: string;
+  }>)>[]>;
+};
+
+import droidFragmentRawString from \\"../GraphQL request\\";
+
+import { Maybe, Episode } from \\"../__generated__/globalTypes\\";
+
+export type DroidFragment = {
+  appearsIn: Maybe<Episode>[];
+};
+
+import heroNameRawString from \\"../GraphQL request\\";
+
+export type HeroName = {
+  hero: Maybe<{
+    name: string;
+    id: string;
+  } & (If<\\"Human\\", HumanFragment> | If<\\"Droid\\", DroidFragment>)>;
+};
+
+export const HeroName = (episode: Optional<Episode>) => ({
+  query: rawHeroName,
+  variables: {
+    episode
+  }
+});
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration fragment with fragment spreads 1`] = `Array []`;
+exports[`Typescript newCodeGeneration fragment with fragment spreads 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "GraphQL request
+/some/file/ComponentA.tsx
+/__generated__/globalTypes.ts
+../../__generated__/globalTypes",
+    },
+    "fileName": "SimpleFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "GraphQL request
+/some/file/ComponentA.tsx
+/__generated__/globalTypes.ts
+../../__generated__/globalTypes",
+    },
+    "fileName": "AnotherFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration fragment with fragment spreads 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "import simpleFragmentRawString from \\"../GraphQL request\\";
+
+export type SimpleFragment = {
+  name: string;
+};
+
+import anotherFragmentRawString from \\"../GraphQL request\\";
+
+export type AnotherFragment = SimpleFragment & {
+  id: string;
+};
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration fragment with fragment spreads with inline fragment 1`] = `Array []`;
+exports[`Typescript newCodeGeneration fragment with fragment spreads with inline fragment 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "GraphQL request
+/some/file/ComponentA.tsx
+/__generated__/globalTypes.ts
+../../__generated__/globalTypes",
+    },
+    "fileName": "SimpleFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "GraphQL request
+/some/file/ComponentA.tsx
+/__generated__/globalTypes.ts
+../../__generated__/globalTypes",
+    },
+    "fileName": "AnotherFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration fragment with fragment spreads with inline fragment 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
+
+import simpleFragmentRawString from \\"../GraphQL request\\";
+
+export type SimpleFragment = {
+  name: string;
+};
+
+import anotherFragmentRawString from \\"../GraphQL request\\";
+
+import { Maybe, Episode } from \\"../__generated__/globalTypes\\";
+
+export type AnotherFragment = SimpleFragment & {
+  id: string;
+} & (If<\\"Human\\", {
+  appearsIn: Maybe<Episode>[];
+}> | If<\\"Droid\\", {}>);
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration handles multiline graphql comments 1`] = `Array []`;
+exports[`Typescript newCodeGeneration handles multiline graphql comments 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "../../__generated__/globalTypes",
+    },
+    "fileName": "CustomScalar.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration handles multiline graphql comments 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "import customScalarRawString from \\"../GraphQL request\\";
+
+export type CustomScalar = {
+  commentTest: Maybe<{
+    multiLine: Maybe<string>;
+  }>;
+};
+
+export const CustomScalar = () => ({
+  query: rawCustomScalar,
+  variables: {}
+});
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration inline fragment 1`] = `Array []`;
+exports[`Typescript newCodeGeneration inline fragment 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "../../__generated__/globalTypes",
+    },
+    "fileName": "HeroInlineFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration inline fragment 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
+
+import heroInlineFragmentRawString from \\"../GraphQL request\\";
+
+export type HeroInlineFragment = {
+  hero: Maybe<{
+    name: string;
+    id: string;
+  }>;
+};
+
+export const HeroInlineFragment = (episode: Optional<Episode>) => ({
+  query: rawHeroInlineFragment,
+  variables: {
+    episode
+  }
+});
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration inline fragment on type conditions 1`] = `Array []`;
+exports[`Typescript newCodeGeneration inline fragment on type conditions 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "../../__generated__/globalTypes",
+    },
+    "fileName": "HeroName.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration inline fragment on type conditions 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
+
+import heroNameRawString from \\"../GraphQL request\\";
+
+export type HeroName = {
+  hero: Maybe<{
+    name: string;
+    id: string;
+  } & (If<\\"Human\\", {
+    homePlanet: Maybe<string>;
+    friends: Maybe<Maybe<{
+      name: string;
+    }>[]>;
+  }> | If<\\"Droid\\", {
+    appearsIn: Maybe<Episode>[];
+  }>)>;
+};
+
+export const HeroName = (episode: Optional<Episode>) => ({
+  query: rawHeroName,
+  variables: {
+    episode
+  }
+});
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration inline fragment on type conditions with differing inner fields 1`] = `Array []`;
+exports[`Typescript newCodeGeneration inline fragment on type conditions with differing inner fields 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "../../__generated__/globalTypes",
+    },
+    "fileName": "HeroName.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration inline fragment on type conditions with differing inner fields 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
+
+import heroNameRawString from \\"../GraphQL request\\";
+
+export type HeroName = {
+  hero: Maybe<{
+    name: string;
+    id: string;
+  } & (If<\\"Human\\", {
+    homePlanet: Maybe<string>;
+    friends: Maybe<Maybe<{
+      name: string;
+    }>[]>;
+  }> | If<\\"Droid\\", {
+    appearsIn: Maybe<Episode>[];
+    friends: Maybe<Maybe<{
+      id: string;
+    }>[]>;
+  }>)>;
+};
+
+export const HeroName = (episode: Optional<Episode>) => ({
+  query: rawHeroName,
+  variables: {
+    episode
+  }
+});
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration multiple nested list enum 1`] = `Array []`;
+exports[`Typescript newCodeGeneration multiple nested list enum 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "../../__generated__/globalTypes",
+    },
+    "fileName": "nesting.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration multiple nested list enum 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "export enum EnumCommentTestCase {
+  first = \\"first\\",
+  second = \\"second\\",
+}
+
+import nestingRawString from \\"../GraphQL request\\";
+
+export type nesting = {
+  nesting: {
+    propB: Maybe<Maybe<Maybe<EnumCommentTestCase>[]>[]>;
+  };
+};
+
+export const nesting = () => ({
+  query: rawnesting,
+  variables: {}
+});
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration multiple nested non-null list enum 1`] = `Array []`;
+exports[`Typescript newCodeGeneration multiple nested non-null list enum 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "../../__generated__/globalTypes",
+    },
+    "fileName": "nesting.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration multiple nested non-null list enum 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "export enum EnumCommentTestCase {
+  first = \\"first\\",
+  second = \\"second\\",
+}
+
+import nestingRawString from \\"../GraphQL request\\";
+
+export type nesting = {
+  nesting: {
+    propA: EnumCommentTestCase[][];
+  };
+};
+
+export const nesting = () => ({
+  query: rawnesting,
+  variables: {}
+});
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration query with fragment spreads 1`] = `Array []`;
+exports[`Typescript newCodeGeneration query with fragment spreads 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "GraphQL request
+/some/file/ComponentA.tsx
+/__generated__/globalTypes.ts
+../../__generated__/globalTypes",
+    },
+    "fileName": "SimpleFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "../../__generated__/globalTypes",
+    },
+    "fileName": "HeroFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration query with fragment spreads 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
+
+import simpleFragmentRawString from \\"../GraphQL request\\";
+
+export type SimpleFragment = {
+  name: string;
+};
+
+import heroFragmentRawString from \\"../GraphQL request\\";
+
+export type HeroFragment = {
+  hero: Maybe<SimpleFragment & {
+    id: string;
+  }>;
+};
+
+export const HeroFragment = (episode: Optional<Episode>) => ({
+  query: rawHeroFragment,
+  variables: {
+    episode
+  }
+});
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration simple fragment 1`] = `Array []`;
+exports[`Typescript newCodeGeneration simple fragment 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "GraphQL request
+/some/file/ComponentA.tsx
+/__generated__/globalTypes.ts
+../../__generated__/globalTypes",
+    },
+    "fileName": "SimpleFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration simple fragment 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "import simpleFragmentRawString from \\"../GraphQL request\\";
+
+export type SimpleFragment = {
+  name: string;
+};
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration simple hero query 1`] = `Array []`;
+exports[`Typescript newCodeGeneration simple hero query 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "../../__generated__/globalTypes",
+    },
+    "fileName": "HeroName.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration simple hero query 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
+
+import heroNameRawString from \\"../GraphQL request\\";
+
+export type HeroName = {
+  hero: Maybe<{
+    name: string;
+    id: string;
+  }>;
+};
+
+export const HeroName = (episode: Optional<Episode>) => ({
+  query: rawHeroName,
+  variables: {
+    episode
+  }
+});
+",
 }
 `;
 
-exports[`Typescript newCodeGeneration simple mutation 1`] = `Array []`;
+exports[`Typescript newCodeGeneration simple mutation 1`] = `
+Array [
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "../../__generated__/globalTypes",
+    },
+    "fileName": "ReviewMovie.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
 
 exports[`Typescript newCodeGeneration simple mutation 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "",
+  "fileContents": "export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
+
+export type ReviewInput = {
+  stars: number;
+  commentary: Optional<string>;
+  favorite_color: Optional<ColorInput>;
+};
+
+export const ReviewInput = (stars: number, commentary: Optional<string>, favorite_color: Optional<ColorInput>) => ({
+  stars,
+  commentary,
+  favorite_color
+});
+
+export type ColorInput = {
+  red: number;
+  green: number;
+  blue: number;
+};
+
+export const ColorInput = (red: number, green: number, blue: number) => ({
+  red,
+  green,
+  blue
+});
+
+import reviewMovieRawString from \\"../GraphQL request\\";
+
+export type ReviewMovie = {
+  createReview: Maybe<{
+    stars: number;
+    commentary: Maybe<string>;
+  }>;
+};
+
+export const ReviewMovie = (episode: Optional<Episode>, review: Optional<ReviewInput>) => ({
+  query: rawReviewMovie,
+  variables: {
+    episode,
+    review
+  }
+});
+",
 }
 `;

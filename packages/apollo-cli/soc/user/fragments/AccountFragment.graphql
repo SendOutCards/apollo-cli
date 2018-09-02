@@ -1,0 +1,3 @@
+fragment AccountFragment on Account {
+  id
+}

@@ -1,6 +1,8 @@
-import { SelectionSet, Field, Fragment, Operation } from 'apollo-codegen-core/lib/compiler';
+import { SelectionSet, Fragment, Operation } from 'apollo-codegen-core/lib/compiler';
 
 import { Set } from 'immutable';
+
+import { camelCase } from 'lodash';
 
 import {
   GraphQLType,
@@ -48,7 +50,9 @@ import {
   Declaration,
   exportNamedDeclaration,
   importDeclaration,
-  importDefaultSpecifier
+  importDefaultSpecifier,
+  importSpecifier,
+  ImportDeclaration
 } from '@babel/types';
 import { variableDeclaration } from '@babel/types';
 import { variableDeclarator } from '@babel/types';
@@ -56,43 +60,15 @@ import { parenthesizedExpression } from '@babel/types';
 import { objectExpression } from '@babel/types';
 import { Identifier } from '@babel/types';
 import { objectProperty } from '@babel/types';
+import { ImportDefaultSpecifier } from '@babel/types';
 
-const typeForGraphQLScalarType = (type: GraphQLScalarType): TSType => {
-  switch (type.name) {
-    case 'String':
-    case 'ID':
-      return TSStringKeyword();
-    case 'Int':
-    case 'Float':
-      return TSNumberKeyword();
-    case 'Boolean':
-      return TSBooleanKeyword();
-    default:
-      return TSAnyKeyword();
-  }
-};
+import { AnyObject, FragmentReference, InlineSelection, Field, OutputType, Scalar } from './anyObject';
+import { fragmentDependencies, Dependency, selectionSetGlobalDependencies } from './dependencies';
 
 const typeForGraphQLEnumType = (type: GraphQLEnumType): TSType => typeReference(type.name);
 
 const typeForGraphQLLeafType = (type: GraphQLLeafType): TSType =>
-  isScalarType(type) ? typeForGraphQLScalarType(type) : typeForGraphQLEnumType(type);
-
-const typeForNonNullGraphQLOutputType = (
-  type: Exclude<GraphQLOutputType, GraphQLNonNull<any>>,
-  selectionSet?: SelectionSet
-): TSType =>
-  isListType(type)
-    ? TSArrayType(typeForGraphQLOutputType(type.ofType, selectionSet))
-    : isLeafType(type)
-      ? typeForGraphQLLeafType(type)
-      : selectionSet != undefined
-        ? typeForSelectionSet(selectionSet)
-        : TSAnyKeyword();
-
-const typeForGraphQLOutputType = (type: GraphQLOutputType, selectionSet?: SelectionSet): TSType =>
-  isNonNullType(type)
-    ? typeForNonNullGraphQLOutputType(type.ofType, selectionSet)
-    : MaybeType(typeForNonNullGraphQLOutputType(type, selectionSet));
+  isScalarType(type) ? typeForScalarName(type.name) : typeForGraphQLEnumType(type);
 
 const typeForNonNullGraphQLInputType = (type: Exclude<GraphQLInputType, GraphQLNonNull<any>>): TSType =>
   isListType(type)
@@ -110,90 +86,39 @@ const typeForGraphQLInputType = (type: GraphQLInputType): TSType =>
 
 const typeReference = (name: string): TSTypeReference => TSTypeReference(identifier(name));
 
+const typeForScalarName = (scalarName: string): TSType => {
+  switch (scalarName) {
+    case 'Int':
+    case 'Float':
+      return TSNumberKeyword();
+    case 'Boolean':
+      return TSBooleanKeyword();
+    default:
+      return TSStringKeyword();
+  }
+};
+
+const typeForScalar = (type: Scalar): TSType => typeForScalarName(type.name);
+
+const typeForOutputType = (type: OutputType): TSType => {
+  switch (type.kind) {
+    case 'Maybe':
+      return MaybeType(typeForOutputType(type.ofType));
+    case 'List':
+      return TSArrayType(typeForOutputType(type.ofType));
+    case 'FragmentReference':
+      return typeReference(type.name);
+    case 'InlineSelection':
+      return typeForInlineSelection(type);
+    case 'Enum':
+      return typeReference(type.name);
+    case 'Scalar':
+      return typeForScalar(type);
+  }
+};
+
 const propertySignatureForField = (field: Field): TSPropertySignature =>
-  TSPropertySignature(
-    identifier(field.alias ? field.alias : field.name),
-    TSTypeAnnotation(typeForGraphQLOutputType(field.type, field.selectionSet))
-  );
-
-type Type = NamedType | UnnamedType;
-
-type NamedType = {
-  named: true;
-  name: string;
-  possibleTypes: Set<string>;
-};
-
-function NamedType(name: string, possibleTypes: Set<string>): NamedType {
-  return {
-    named: true,
-    name,
-    possibleTypes
-  };
-}
-
-type UnnamedType = {
-  named: false;
-  possibleTypes: Set<string>;
-  intersections: NamedType[];
-  fields: Field[];
-  booleanConditions: Type[];
-  typeConditions: Type[];
-};
-
-const getType = (selectionSet: SelectionSet): Type => {
-  const unnamed = getUnnamedType(selectionSet);
-  return unnamed.intersections.length == 1 &&
-    unnamed.fields.length == 0 &&
-    unnamed.booleanConditions.length == 0 &&
-    unnamed.typeConditions.length == 0
-    ? unnamed.intersections[0]
-    : unnamed;
-};
-
-const getUnnamedType = (selectionSet: SelectionSet): UnnamedType => {
-  const emptyType: UnnamedType = {
-    named: false,
-    possibleTypes: Set(selectionSet.possibleTypes.map(type => type.name)),
-    intersections: [],
-    fields: [],
-    booleanConditions: [],
-    typeConditions: []
-  };
-  return selectionSet.selections.reduce((type, selection) => {
-    switch (selection.kind) {
-      case 'Field':
-        return { ...type, fields: [...type.fields, selection] };
-      case 'BooleanCondition':
-        return { ...type, booleanConditions: [...type.booleanConditions, getType(selection.selectionSet)] };
-      case 'TypeCondition':
-        const conditionalType = getType(selection.selectionSet);
-        if (conditionalType.possibleTypes.equals(type.possibleTypes)) {
-          if (conditionalType.named) {
-            return { ...type, intersections: [...type.intersections, conditionalType] };
-          } else {
-            return {
-              ...type,
-              intersections: type.intersections.concat(conditionalType.intersections),
-              fields: type.fields.concat(conditionalType.fields),
-              booleanConditions: type.booleanConditions.concat(conditionalType.booleanConditions),
-              typeConditions: type.typeConditions.concat(conditionalType.typeConditions)
-            };
-          }
-        }
-        return { ...type, typeConditions: [...type.typeConditions, conditionalType] };
-      case 'FragmentSpread':
-        const possibleTypes = Set(selection.selectionSet.possibleTypes.map(type => type.name));
-        const fragmentType = NamedType(selection.fragmentName, possibleTypes);
-        return possibleTypes.isSuperset(type.possibleTypes)
-          ? { ...type, intersections: [...type.intersections, fragmentType] }
-          : {
-              ...type,
-              typeConditions: [...type.typeConditions, fragmentType]
-            };
-    }
-  }, emptyType);
-};
+  TSPropertySignature(identifier(field.name), TSTypeAnnotation(typeForOutputType(field.type)));
 
 const GenericType = (name: string, ...types: TSType[]): TSType =>
   TSTypeReference(identifier(name), TSTypeParameterInstantiation(types) as any);
@@ -216,30 +141,31 @@ const IfType = (possibleTypes: Set<string>, type: TSType): TSType =>
 
 const OptionalType = (type: TSType): TSType => GenericType('Optional', type);
 
-const typeForNamedType = (type: NamedType): TSType => typeReference(type.name);
+const typeForFragmentReference = (type: FragmentReference): TSType => typeReference(type.name);
 
-const typeForType = (type: Type): TSType => (type.named ? typeForNamedType(type) : typeForUnnamedType(type));
+const typeForAnyObject = (object: AnyObject): TSType =>
+  object.kind == 'FragmentReference' ? typeForFragmentReference(object) : typeForInlineSelection(object);
 
-const EmptyType = TSTypeLiteral([]);
+const emptyType = TSTypeLiteral([]);
 
-const unionTypeForTypeConditions = (typeConditions: Type[], possibleTypes: Set<string>): TSUnionType => {
+const unionTypeForTypeConditions = (typeConditions: AnyObject[], possibleTypes: Set<string>): TSUnionType => {
   const remainingPossibleTypes = possibleTypes.subtract(
     typeConditions.reduce((possibleTypes, type) => possibleTypes.union(type.possibleTypes), Set<string>())
   );
   return TSUnionType(
     typeConditions
-      .map(type => IfType(type.possibleTypes, typeForType(type)))
-      .concat(remainingPossibleTypes.size > 0 ? [IfType(remainingPossibleTypes, EmptyType)] : [])
+      .map(type => IfType(type.possibleTypes, typeForAnyObject(type)))
+      .concat(remainingPossibleTypes.size > 0 ? [IfType(remainingPossibleTypes, emptyType)] : [])
   );
 };
 
-const typeForUnnamedType = (type: UnnamedType): TSType =>
+const typeForInlineSelection = (type: InlineSelection): TSType =>
   TSIntersectionType(
     [
-      ...type.intersections.map(typeForNamedType),
+      ...type.intersections.map(typeForFragmentReference),
       type.fields.length > 0 ? TSTypeLiteral(type.fields.map(propertySignatureForField)) : undefined,
       type.booleanConditions.length > 0
-        ? PartialType(TSIntersectionType(type.booleanConditions.map(typeForType)))
+        ? PartialType(TSIntersectionType(type.booleanConditions.map(typeForAnyObject)))
         : undefined,
       type.typeConditions.length > 0
         ? TSParenthesizedType(unionTypeForTypeConditions(type.typeConditions, type.possibleTypes))
@@ -249,7 +175,8 @@ const typeForUnnamedType = (type: UnnamedType): TSType =>
       .map(x => x as TSType)
   );
 
-const typeForSelectionSet = (selectionSet: SelectionSet) => typeForUnnamedType(getUnnamedType(selectionSet));
+const typeForSelectionSet = (selectionSet: SelectionSet) =>
+  typeForInlineSelection(InlineSelection(selectionSet));
 
 const enumMemberForGraphQLEnumValue = (value: GraphQLEnumValue) =>
   TSEnumMember(identifier(value.name), stringLiteral(value.name));
@@ -286,10 +213,24 @@ export const variableDeclarationForGraphQLInputObjectType = (type: GraphQLInputO
     )
   ]);
 
-export const importDeclarationForFragment = (fragment: Fragment) =>
+const rawStringImportDefaultSpecifier = (fragmentOrOperationName: string): ImportDefaultSpecifier =>
+  importDefaultSpecifier(identifier(camelCase(fragmentOrOperationName + 'RawString')));
+
+const globalImportDeclarationForDependencies = (dependencies: string[]): ImportDeclaration | undefined =>
+  dependencies.length > 0
+    ? importDeclaration(
+        dependencies.map(dependency => importSpecifier(identifier(dependency), identifier(dependency))),
+        stringLiteral('../__generated__/globalTypes')
+      )
+    : undefined;
+
+export const globalImportDeclarationForFragmentDependencies = (fragment: Fragment) =>
+  globalImportDeclarationForDependencies(selectionSetGlobalDependencies(fragment.selectionSet));
+
+export const importDeclarationForFragmentRawString = (fragment: Fragment) =>
   importDeclaration(
-    [importDefaultSpecifier(identifier(fragment.fragmentName + 'RawString'))],
-    stringLiteral(fragment.filePath)
+    [rawStringImportDefaultSpecifier(fragment.fragmentName)],
+    stringLiteral('../' + fragment.filePath)
   );
 
 export const typeAliasDeclarationForFragment = (fragment: Fragment) =>
@@ -297,6 +238,12 @@ export const typeAliasDeclarationForFragment = (fragment: Fragment) =>
     identifier(fragment.fragmentName),
     undefined,
     typeForSelectionSet(fragment.selectionSet)
+  );
+
+export const importDeclarationForOperationRawString = (operation: Operation) =>
+  importDeclaration(
+    [rawStringImportDefaultSpecifier(operation.operationName)],
+    stringLiteral('../' + operation.filePath)
   );
 
 export const typeAliasDeclarationForOperation = (operation: Operation) =>
