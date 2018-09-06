@@ -1,16 +1,4 @@
-import accountFragmentRawString from "../user/fragments/AccountFragment.graphql";
 
-export type AccountFragment = {
-  id: string;
-};
-
-import loadAccountRawString from "../user/queries/LoadAccount.graphql";
-
-export type LoadAccount = {
-  account: AccountFragment;
-};
-
-export const LoadAccount = () => ({
-  query: rawLoadAccount,
-  variables: {}
-});
+export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;

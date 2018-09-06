@@ -1,3 +1,6 @@
 fragment AccountFragment on Account {
   id
+  shippingAddress {
+    ...AddressFragment
+  }
 }

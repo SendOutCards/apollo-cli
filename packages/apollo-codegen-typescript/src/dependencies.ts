@@ -1,12 +1,19 @@
 import { SelectionSet } from 'apollo-codegen-core/lib/compiler';
 
-import { InlineSelection, FragmentReference, OutputType, AnyObject } from './anyObject';
+import { InlineSelection, FragmentReference, OutputType, AnyObject, InputType } from './intermediates';
+
+import { GraphQLType, GraphQLInputType } from 'graphql';
 
 import { Set } from 'immutable';
 
 type Dependency = {
   type: 'fragment' | 'global';
   name: string;
+};
+
+type Dependencies = {
+  global: string[];
+  fragments: string[];
 };
 
 const globalDependency = (name: string): Dependency => ({ type: 'global', name });
@@ -21,6 +28,21 @@ const outputTypeDependencies = (type: OutputType): Dependency[] => {
       return [fragmentReferenceDependency(type)];
     case 'InlineSelection':
       return inlineSelectionDependencies(type);
+    case 'Enum':
+      return [globalDependency(type.name)];
+    case 'Scalar':
+      return [];
+  }
+};
+
+const inputTypeDependencies = (type: InputType): Dependency[] => {
+  switch (type.kind) {
+    case 'Maybe':
+      return [globalDependency('Optional'), ...inputTypeDependencies(type.ofType)];
+    case 'List':
+      return inputTypeDependencies(type.ofType);
+    case 'InputObject':
+      return [globalDependency(type.name)];
     case 'Enum':
       return [globalDependency(type.name)];
     case 'Scalar':
@@ -50,11 +72,25 @@ const dedupedDependenciesOfType = (dependencies: Dependency[], type: 'fragment' 
     dependencies.filter(dependency => dependency.type == type).map(dependency => dependency.name)
   ).toArray();
 
-const selectionSetDependenciesOfType = (selectionSet: SelectionSet, type: 'fragment' | 'global'): string[] =>
-  dedupedDependenciesOfType(inlineSelectionDependencies(InlineSelection(selectionSet)), type);
+const variableDependencies = (variable: { name: string; type: GraphQLType }): Dependency[] =>
+  inputTypeDependencies(InputType(variable.type as GraphQLInputType));
 
-export const selectionSetGlobalDependencies = (selectionSet: SelectionSet): string[] =>
-  selectionSetDependenciesOfType(selectionSet, 'global');
+const allDependencies = (
+  selectionSet: SelectionSet,
+  variables?: { name: string; type: GraphQLType }[]
+): Dependency[] =>
+  inlineSelectionDependencies(InlineSelection(selectionSet)).concat(
+    variables ? variables.flatMap(variableDependencies) : []
+  );
 
-export const selectionSetFragmentDependencies = (selectionSet: SelectionSet): string[] =>
-  selectionSetDependenciesOfType(selectionSet, 'fragment');
+const mapDependencies = (dependencies: Dependency[]): Dependencies => ({
+  global: dedupedDependenciesOfType(dependencies, 'global'),
+  fragments: dedupedDependenciesOfType(dependencies, 'fragment')
+});
+
+const Dependencies = (
+  selectionSet: SelectionSet,
+  variables?: { name: string; type: GraphQLType }[]
+): Dependencies => mapDependencies(allDependencies(selectionSet, variables));
+
+export default Dependencies;

@@ -4,7 +4,28 @@ exports[`Typescript newCodeGeneration duplicates 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "../../__generated__/globalTypes",
+      "fileContents": "import { Maybe, EnumCommentTestCase, Duplicate } from \\"../../__generated__/globalTypes\\";
+
+import duplicatesRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+const duplicatesString = [duplicatesRawString].join(\\"\\\\n\\\\n\\");
+
+export type duplicates = {
+  duplicates: {
+    propA: string[];
+    propB: Maybe<Maybe<string>[]>;
+  };
+};
+
+export const duplicates = (a: EnumCommentTestCase, b: EnumCommentTestCase, c: Duplicate) => ({
+  query: duplicatesString,
+  variables: {
+    a,
+    b,
+    c
+  }
+});
+",
     },
     "fileName": "duplicates.ts",
     "sourcePath": "GraphQL request",
@@ -14,7 +35,12 @@ Array [
 
 exports[`Typescript newCodeGeneration duplicates 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "export enum EnumCommentTestCase {
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
+
+export enum EnumCommentTestCase {
   first = \\"first\\",
   second = \\"second\\",
 }
@@ -28,24 +54,6 @@ export const Duplicate = (propA: EnumCommentTestCase, propB: EnumCommentTestCase
   propA,
   propB
 });
-
-import duplicatesRawString from \\"../GraphQL request\\";
-
-export type duplicates = {
-  duplicates: {
-    propA: EnumCommentTestCase[][];
-    propB: Maybe<Maybe<Maybe<EnumCommentTestCase>[]>[]>;
-  };
-};
-
-export const duplicates = (a: EnumCommentTestCase, b: EnumCommentTestCase, c: Duplicate) => ({
-  query: rawduplicates,
-  variables: {
-    a,
-    b,
-    c
-  }
-});
 ",
 }
 `;
@@ -54,45 +62,11 @@ exports[`Typescript newCodeGeneration fragment spreads with inline fragments 1`]
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "GraphQL request
-/some/file/ComponentA.tsx
-/__generated__/globalTypes.ts
-../../__generated__/globalTypes",
-    },
-    "fileName": "HumanFragment.ts",
-    "sourcePath": "GraphQL request",
-  },
-  Object {
-    "content": TypescriptGeneratedFile {
-      "fileContents": "GraphQL request
-/some/file/ComponentA.tsx
-/__generated__/globalTypes.ts
-../../__generated__/globalTypes",
-    },
-    "fileName": "DroidFragment.ts",
-    "sourcePath": "GraphQL request",
-  },
-  Object {
-    "content": TypescriptGeneratedFile {
-      "fileContents": "../../__generated__/globalTypes",
-    },
-    "fileName": "HeroName.ts",
-    "sourcePath": "GraphQL request",
-  },
-]
-`;
+      "fileContents": "import { Maybe } from \\"../../__generated__/globalTypes\\";
 
-exports[`Typescript newCodeGeneration fragment spreads with inline fragments 2`] = `
-TypescriptGeneratedFile {
-  "fileContents": "export enum Episode {
-  NEWHOPE = \\"NEWHOPE\\",
-  EMPIRE = \\"EMPIRE\\",
-  JEDI = \\"JEDI\\",
-}
+import humanFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
-import humanFragmentRawString from \\"../GraphQL request\\";
-
-import { Maybe } from \\"../__generated__/globalTypes\\";
+export const humanFragmentString = [humanFragmentRawString].join(\\"\\\\n\\\\n\\");
 
 export type HumanFragment = {
   homePlanet: Maybe<string>;
@@ -102,16 +76,38 @@ export type HumanFragment = {
     id: string;
   }>)>[]>;
 };
+",
+    },
+    "fileName": "HumanFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "import { Maybe, Episode } from \\"../../__generated__/globalTypes\\";
 
-import droidFragmentRawString from \\"../GraphQL request\\";
+import droidFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
-import { Maybe, Episode } from \\"../__generated__/globalTypes\\";
+export const droidFragmentString = [droidFragmentRawString].join(\\"\\\\n\\\\n\\");
 
 export type DroidFragment = {
   appearsIn: Maybe<Episode>[];
 };
+",
+    },
+    "fileName": "DroidFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+  Object {
+    "content": TypescriptGeneratedFile {
+      "fileContents": "import { Maybe, Optional, Episode } from \\"../../__generated__/globalTypes\\";
 
-import heroNameRawString from \\"../GraphQL request\\";
+import { HumanFragment, humanFragmentString } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/HumanFragment\\";
+
+import { DroidFragment, droidFragmentString } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/DroidFragment\\";
+
+import heroNameRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+const heroNameString = [heroNameRawString, humanFragmentString, droidFragmentString].join(\\"\\\\n\\\\n\\");
 
 export type HeroName = {
   hero: Maybe<{
@@ -121,11 +117,31 @@ export type HeroName = {
 };
 
 export const HeroName = (episode: Optional<Episode>) => ({
-  query: rawHeroName,
+  query: heroNameString,
   variables: {
     episode
   }
 });
+",
+    },
+    "fileName": "HeroName.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
+
+exports[`Typescript newCodeGeneration fragment spreads with inline fragments 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
+
+export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
 ",
 }
 `;
@@ -134,20 +150,30 @@ exports[`Typescript newCodeGeneration fragment with fragment spreads 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "GraphQL request
-/some/file/ComponentA.tsx
-/__generated__/globalTypes.ts
-../../__generated__/globalTypes",
+      "fileContents": "import simpleFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+export const simpleFragmentString = [simpleFragmentRawString].join(\\"\\\\n\\\\n\\");
+
+export type SimpleFragment = {
+  name: string;
+};
+",
     },
     "fileName": "SimpleFragment.ts",
     "sourcePath": "GraphQL request",
   },
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "GraphQL request
-/some/file/ComponentA.tsx
-/__generated__/globalTypes.ts
-../../__generated__/globalTypes",
+      "fileContents": "import { SimpleFragment, simpleFragmentString } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/SimpleFragment\\";
+
+import anotherFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+export const anotherFragmentString = [anotherFragmentRawString, simpleFragmentString].join(\\"\\\\n\\\\n\\");
+
+export type AnotherFragment = SimpleFragment & {
+  id: string;
+};
+",
     },
     "fileName": "AnotherFragment.ts",
     "sourcePath": "GraphQL request",
@@ -157,17 +183,10 @@ Array [
 
 exports[`Typescript newCodeGeneration fragment with fragment spreads 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "import simpleFragmentRawString from \\"../GraphQL request\\";
-
-export type SimpleFragment = {
-  name: string;
-};
-
-import anotherFragmentRawString from \\"../GraphQL request\\";
-
-export type AnotherFragment = SimpleFragment & {
-  id: string;
-};
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
 ",
 }
 `;
@@ -176,20 +195,34 @@ exports[`Typescript newCodeGeneration fragment with fragment spreads with inline
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "GraphQL request
-/some/file/ComponentA.tsx
-/__generated__/globalTypes.ts
-../../__generated__/globalTypes",
+      "fileContents": "import simpleFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+export const simpleFragmentString = [simpleFragmentRawString].join(\\"\\\\n\\\\n\\");
+
+export type SimpleFragment = {
+  name: string;
+};
+",
     },
     "fileName": "SimpleFragment.ts",
     "sourcePath": "GraphQL request",
   },
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "GraphQL request
-/some/file/ComponentA.tsx
-/__generated__/globalTypes.ts
-../../__generated__/globalTypes",
+      "fileContents": "import { Maybe, Episode } from \\"../../__generated__/globalTypes\\";
+
+import { SimpleFragment, simpleFragmentString } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/SimpleFragment\\";
+
+import anotherFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+export const anotherFragmentString = [anotherFragmentRawString, simpleFragmentString].join(\\"\\\\n\\\\n\\");
+
+export type AnotherFragment = SimpleFragment & {
+  id: string;
+} & (If<\\"Human\\", {
+  appearsIn: Maybe<Episode>[];
+}> | If<\\"Droid\\", {}>);
+",
     },
     "fileName": "AnotherFragment.ts",
     "sourcePath": "GraphQL request",
@@ -199,27 +232,16 @@ Array [
 
 exports[`Typescript newCodeGeneration fragment with fragment spreads with inline fragment 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "export enum Episode {
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
+
+export enum Episode {
   NEWHOPE = \\"NEWHOPE\\",
   EMPIRE = \\"EMPIRE\\",
   JEDI = \\"JEDI\\",
 }
-
-import simpleFragmentRawString from \\"../GraphQL request\\";
-
-export type SimpleFragment = {
-  name: string;
-};
-
-import anotherFragmentRawString from \\"../GraphQL request\\";
-
-import { Maybe, Episode } from \\"../__generated__/globalTypes\\";
-
-export type AnotherFragment = SimpleFragment & {
-  id: string;
-} & (If<\\"Human\\", {
-  appearsIn: Maybe<Episode>[];
-}> | If<\\"Droid\\", {}>);
 ",
 }
 `;
@@ -228,7 +250,23 @@ exports[`Typescript newCodeGeneration handles multiline graphql comments 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "../../__generated__/globalTypes",
+      "fileContents": "import { Maybe } from \\"../../__generated__/globalTypes\\";
+
+import customScalarRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+const customScalarString = [customScalarRawString].join(\\"\\\\n\\\\n\\");
+
+export type CustomScalar = {
+  commentTest: Maybe<{
+    multiLine: Maybe<string>;
+  }>;
+};
+
+export const CustomScalar = () => ({
+  query: customScalarString,
+  variables: {}
+});
+",
     },
     "fileName": "CustomScalar.ts",
     "sourcePath": "GraphQL request",
@@ -238,18 +276,10 @@ Array [
 
 exports[`Typescript newCodeGeneration handles multiline graphql comments 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "import customScalarRawString from \\"../GraphQL request\\";
-
-export type CustomScalar = {
-  commentTest: Maybe<{
-    multiLine: Maybe<string>;
-  }>;
-};
-
-export const CustomScalar = () => ({
-  query: rawCustomScalar,
-  variables: {}
-});
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
 ",
 }
 `;
@@ -258,23 +288,11 @@ exports[`Typescript newCodeGeneration inline fragment 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "../../__generated__/globalTypes",
-    },
-    "fileName": "HeroInlineFragment.ts",
-    "sourcePath": "GraphQL request",
-  },
-]
-`;
+      "fileContents": "import { Maybe, Optional, Episode } from \\"../../__generated__/globalTypes\\";
 
-exports[`Typescript newCodeGeneration inline fragment 2`] = `
-TypescriptGeneratedFile {
-  "fileContents": "export enum Episode {
-  NEWHOPE = \\"NEWHOPE\\",
-  EMPIRE = \\"EMPIRE\\",
-  JEDI = \\"JEDI\\",
-}
+import heroInlineFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
-import heroInlineFragmentRawString from \\"../GraphQL request\\";
+const heroInlineFragmentString = [heroInlineFragmentRawString].join(\\"\\\\n\\\\n\\");
 
 export type HeroInlineFragment = {
   hero: Maybe<{
@@ -284,11 +302,31 @@ export type HeroInlineFragment = {
 };
 
 export const HeroInlineFragment = (episode: Optional<Episode>) => ({
-  query: rawHeroInlineFragment,
+  query: heroInlineFragmentString,
   variables: {
     episode
   }
 });
+",
+    },
+    "fileName": "HeroInlineFragment.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
+
+exports[`Typescript newCodeGeneration inline fragment 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
+
+export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
 ",
 }
 `;
@@ -297,23 +335,11 @@ exports[`Typescript newCodeGeneration inline fragment on type conditions 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "../../__generated__/globalTypes",
-    },
-    "fileName": "HeroName.ts",
-    "sourcePath": "GraphQL request",
-  },
-]
-`;
+      "fileContents": "import { Maybe, Episode, Optional } from \\"../../__generated__/globalTypes\\";
 
-exports[`Typescript newCodeGeneration inline fragment on type conditions 2`] = `
-TypescriptGeneratedFile {
-  "fileContents": "export enum Episode {
-  NEWHOPE = \\"NEWHOPE\\",
-  EMPIRE = \\"EMPIRE\\",
-  JEDI = \\"JEDI\\",
-}
+import heroNameRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
-import heroNameRawString from \\"../GraphQL request\\";
+const heroNameString = [heroNameRawString].join(\\"\\\\n\\\\n\\");
 
 export type HeroName = {
   hero: Maybe<{
@@ -330,11 +356,31 @@ export type HeroName = {
 };
 
 export const HeroName = (episode: Optional<Episode>) => ({
-  query: rawHeroName,
+  query: heroNameString,
   variables: {
     episode
   }
 });
+",
+    },
+    "fileName": "HeroName.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
+
+exports[`Typescript newCodeGeneration inline fragment on type conditions 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
+
+export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
 ",
 }
 `;
@@ -343,23 +389,11 @@ exports[`Typescript newCodeGeneration inline fragment on type conditions with di
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "../../__generated__/globalTypes",
-    },
-    "fileName": "HeroName.ts",
-    "sourcePath": "GraphQL request",
-  },
-]
-`;
+      "fileContents": "import { Maybe, Episode, Optional } from \\"../../__generated__/globalTypes\\";
 
-exports[`Typescript newCodeGeneration inline fragment on type conditions with differing inner fields 2`] = `
-TypescriptGeneratedFile {
-  "fileContents": "export enum Episode {
-  NEWHOPE = \\"NEWHOPE\\",
-  EMPIRE = \\"EMPIRE\\",
-  JEDI = \\"JEDI\\",
-}
+import heroNameRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
-import heroNameRawString from \\"../GraphQL request\\";
+const heroNameString = [heroNameRawString].join(\\"\\\\n\\\\n\\");
 
 export type HeroName = {
   hero: Maybe<{
@@ -379,11 +413,31 @@ export type HeroName = {
 };
 
 export const HeroName = (episode: Optional<Episode>) => ({
-  query: rawHeroName,
+  query: heroNameString,
   variables: {
     episode
   }
 });
+",
+    },
+    "fileName": "HeroName.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
+
+exports[`Typescript newCodeGeneration inline fragment on type conditions with differing inner fields 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
+
+export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
 ",
 }
 `;
@@ -392,7 +446,23 @@ exports[`Typescript newCodeGeneration multiple nested list enum 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "../../__generated__/globalTypes",
+      "fileContents": "import { Maybe } from \\"../../__generated__/globalTypes\\";
+
+import nestingRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+const nestingString = [nestingRawString].join(\\"\\\\n\\\\n\\");
+
+export type nesting = {
+  nesting: {
+    propB: Maybe<Maybe<string>[]>;
+  };
+};
+
+export const nesting = () => ({
+  query: nestingString,
+  variables: {}
+});
+",
     },
     "fileName": "nesting.ts",
     "sourcePath": "GraphQL request",
@@ -402,23 +472,15 @@ Array [
 
 exports[`Typescript newCodeGeneration multiple nested list enum 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "export enum EnumCommentTestCase {
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
+
+export enum EnumCommentTestCase {
   first = \\"first\\",
   second = \\"second\\",
 }
-
-import nestingRawString from \\"../GraphQL request\\";
-
-export type nesting = {
-  nesting: {
-    propB: Maybe<Maybe<Maybe<EnumCommentTestCase>[]>[]>;
-  };
-};
-
-export const nesting = () => ({
-  query: rawnesting,
-  variables: {}
-});
 ",
 }
 `;
@@ -427,7 +489,21 @@ exports[`Typescript newCodeGeneration multiple nested non-null list enum 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "../../__generated__/globalTypes",
+      "fileContents": "import nestingRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+const nestingString = [nestingRawString].join(\\"\\\\n\\\\n\\");
+
+export type nesting = {
+  nesting: {
+    propA: string[];
+  };
+};
+
+export const nesting = () => ({
+  query: nestingString,
+  variables: {}
+});
+",
     },
     "fileName": "nesting.ts",
     "sourcePath": "GraphQL request",
@@ -437,23 +513,15 @@ Array [
 
 exports[`Typescript newCodeGeneration multiple nested non-null list enum 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "export enum EnumCommentTestCase {
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
+
+export enum EnumCommentTestCase {
   first = \\"first\\",
   second = \\"second\\",
 }
-
-import nestingRawString from \\"../GraphQL request\\";
-
-export type nesting = {
-  nesting: {
-    propA: EnumCommentTestCase[][];
-  };
-};
-
-export const nesting = () => ({
-  query: rawnesting,
-  variables: {}
-});
 ",
 }
 `;
@@ -462,17 +530,41 @@ exports[`Typescript newCodeGeneration query with fragment spreads 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "GraphQL request
-/some/file/ComponentA.tsx
-/__generated__/globalTypes.ts
-../../__generated__/globalTypes",
+      "fileContents": "import simpleFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+export const simpleFragmentString = [simpleFragmentRawString].join(\\"\\\\n\\\\n\\");
+
+export type SimpleFragment = {
+  name: string;
+};
+",
     },
     "fileName": "SimpleFragment.ts",
     "sourcePath": "GraphQL request",
   },
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "../../__generated__/globalTypes",
+      "fileContents": "import { Maybe, Optional, Episode } from \\"../../__generated__/globalTypes\\";
+
+import { SimpleFragment, simpleFragmentString } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/SimpleFragment\\";
+
+import heroFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+const heroFragmentString = [heroFragmentRawString, simpleFragmentString].join(\\"\\\\n\\\\n\\");
+
+export type HeroFragment = {
+  hero: Maybe<SimpleFragment & {
+    id: string;
+  }>;
+};
+
+export const HeroFragment = (episode: Optional<Episode>) => ({
+  query: heroFragmentString,
+  variables: {
+    episode
+  }
+});
+",
     },
     "fileName": "HeroFragment.ts",
     "sourcePath": "GraphQL request",
@@ -482,32 +574,16 @@ Array [
 
 exports[`Typescript newCodeGeneration query with fragment spreads 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "export enum Episode {
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
+
+export enum Episode {
   NEWHOPE = \\"NEWHOPE\\",
   EMPIRE = \\"EMPIRE\\",
   JEDI = \\"JEDI\\",
 }
-
-import simpleFragmentRawString from \\"../GraphQL request\\";
-
-export type SimpleFragment = {
-  name: string;
-};
-
-import heroFragmentRawString from \\"../GraphQL request\\";
-
-export type HeroFragment = {
-  hero: Maybe<SimpleFragment & {
-    id: string;
-  }>;
-};
-
-export const HeroFragment = (episode: Optional<Episode>) => ({
-  query: rawHeroFragment,
-  variables: {
-    episode
-  }
-});
 ",
 }
 `;
@@ -516,10 +592,14 @@ exports[`Typescript newCodeGeneration simple fragment 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "GraphQL request
-/some/file/ComponentA.tsx
-/__generated__/globalTypes.ts
-../../__generated__/globalTypes",
+      "fileContents": "import simpleFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+export const simpleFragmentString = [simpleFragmentRawString].join(\\"\\\\n\\\\n\\");
+
+export type SimpleFragment = {
+  name: string;
+};
+",
     },
     "fileName": "SimpleFragment.ts",
     "sourcePath": "GraphQL request",
@@ -529,11 +609,10 @@ Array [
 
 exports[`Typescript newCodeGeneration simple fragment 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "import simpleFragmentRawString from \\"../GraphQL request\\";
-
-export type SimpleFragment = {
-  name: string;
-};
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
 ",
 }
 `;
@@ -542,23 +621,11 @@ exports[`Typescript newCodeGeneration simple hero query 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "../../__generated__/globalTypes",
-    },
-    "fileName": "HeroName.ts",
-    "sourcePath": "GraphQL request",
-  },
-]
-`;
+      "fileContents": "import { Maybe, Optional, Episode } from \\"../../__generated__/globalTypes\\";
 
-exports[`Typescript newCodeGeneration simple hero query 2`] = `
-TypescriptGeneratedFile {
-  "fileContents": "export enum Episode {
-  NEWHOPE = \\"NEWHOPE\\",
-  EMPIRE = \\"EMPIRE\\",
-  JEDI = \\"JEDI\\",
-}
+import heroNameRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
-import heroNameRawString from \\"../GraphQL request\\";
+const heroNameString = [heroNameRawString].join(\\"\\\\n\\\\n\\");
 
 export type HeroName = {
   hero: Maybe<{
@@ -568,11 +635,31 @@ export type HeroName = {
 };
 
 export const HeroName = (episode: Optional<Episode>) => ({
-  query: rawHeroName,
+  query: heroNameString,
   variables: {
     episode
   }
 });
+",
+    },
+    "fileName": "HeroName.ts",
+    "sourcePath": "GraphQL request",
+  },
+]
+`;
+
+exports[`Typescript newCodeGeneration simple hero query 2`] = `
+TypescriptGeneratedFile {
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
+
+export enum Episode {
+  NEWHOPE = \\"NEWHOPE\\",
+  EMPIRE = \\"EMPIRE\\",
+  JEDI = \\"JEDI\\",
+}
 ",
 }
 `;
@@ -581,7 +668,27 @@ exports[`Typescript newCodeGeneration simple mutation 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "../../__generated__/globalTypes",
+      "fileContents": "import { Maybe, Optional, Episode, ReviewInput } from \\"../../__generated__/globalTypes\\";
+
+import reviewMovieRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+
+const reviewMovieString = [reviewMovieRawString].join(\\"\\\\n\\\\n\\");
+
+export type ReviewMovie = {
+  createReview: Maybe<{
+    stars: number;
+    commentary: Maybe<string>;
+  }>;
+};
+
+export const ReviewMovie = (episode: Optional<Episode>, review: Optional<ReviewInput>) => ({
+  query: reviewMovieString,
+  variables: {
+    episode,
+    review
+  }
+});
+",
     },
     "fileName": "ReviewMovie.ts",
     "sourcePath": "GraphQL request",
@@ -591,7 +698,12 @@ Array [
 
 exports[`Typescript newCodeGeneration simple mutation 2`] = `
 TypescriptGeneratedFile {
-  "fileContents": "export enum Episode {
+  "fileContents": "export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };
+
+export enum Episode {
   NEWHOPE = \\"NEWHOPE\\",
   EMPIRE = \\"EMPIRE\\",
   JEDI = \\"JEDI\\",
@@ -619,23 +731,6 @@ export const ColorInput = (red: number, green: number, blue: number) => ({
   red,
   green,
   blue
-});
-
-import reviewMovieRawString from \\"../GraphQL request\\";
-
-export type ReviewMovie = {
-  createReview: Maybe<{
-    stars: number;
-    commentary: Maybe<string>;
-  }>;
-};
-
-export const ReviewMovie = (episode: Optional<Episode>, review: Optional<ReviewInput>) => ({
-  query: rawReviewMovie,
-  variables: {
-    episode,
-    review
-  }
 });
 ",
 }

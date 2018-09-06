@@ -1,16 +1,27 @@
 import { SelectionSet, Selection, Field as CompilerField } from 'apollo-codegen-core/lib/compiler';
 
 import { Set } from 'immutable';
-import { GraphQLOutputType, isNonNullType, GraphQLNonNull, isListType, isEnumType } from 'graphql';
+import {
+  GraphQLOutputType,
+  isNonNullType,
+  GraphQLNonNull,
+  isListType,
+  isEnumType,
+  GraphQLList,
+  GraphQLInputType,
+  isInputObjectType,
+  GraphQLLeafType,
+  isCompositeType
+} from 'graphql';
 
-export type List = {
+export type List<T> = {
   kind: 'List';
-  ofType: OutputType;
+  ofType: T;
 };
 
-export type Maybe = {
+export type Maybe<T> = {
   kind: 'Maybe';
-  ofType: OutputType;
+  ofType: T;
 };
 
 export type Field = {
@@ -35,6 +46,11 @@ export type InlineSelection = {
 
 export type AnyObject = FragmentReference | InlineSelection;
 
+export type InputObject = {
+  kind: 'InputObject';
+  name: string;
+};
+
 export type Enum = {
   kind: 'Enum';
   name: string;
@@ -45,32 +61,71 @@ export type Scalar = {
   name: string;
 };
 
-export type OutputType = List | Maybe | AnyObject | Enum | Scalar;
+type Leaf = Enum | Scalar;
 
-const List = (ofType: OutputType): List => ({ kind: 'List', ofType });
+type NonListType<T> = Maybe<T> | T;
 
-const Maybe = (ofType: OutputType): Maybe => ({ kind: 'Maybe', ofType });
+type NonNullType<T> = List<NonListType<T>> | T;
+
+type Type<T> = Maybe<NonNullType<T>> | NonNullType<T>;
+
+export type OutputType = Type<AnyObject | Leaf>;
+
+export type InputType = Type<InputObject | Leaf>;
+
+const List = <T>(ofType: T): List<T> => ({ kind: 'List', ofType });
+
+const Maybe = <T>(ofType: T): Maybe<T> => ({ kind: 'Maybe', ofType });
+
+const InputObject = (name: string): InputObject => ({ kind: 'InputObject', name });
 
 const Enum = (name: string): Enum => ({ kind: 'Enum', name });
 
 const Scalar = (name: string): Scalar => ({ kind: 'Scalar', name });
 
-const typeIgnoringNonNull = (
+const Leaf = (type: GraphQLLeafType): Leaf => (isEnumType(type) ? Enum(type.name) : Scalar(type.name));
+
+const fail = (message: string): any => {
+  throw Error(message);
+};
+
+const AnyObjectOrLeaf = (
+  type: Exclude<GraphQLOutputType, GraphQLList<any> | GraphQLNonNull<any>>,
+  selection?: InlineSelection
+): AnyObject | Leaf =>
+  selection ? selection : isCompositeType(type) ? fail('Composite type without selection.') : Leaf(type);
+
+const NonListOutputType = (
+  type: Exclude<GraphQLOutputType, GraphQLList<any>>,
+  selection?: InlineSelection
+): NonListType<AnyObject | Leaf> =>
+  isNonNullType(type) ? AnyObjectOrLeaf(type.ofType, selection) : Maybe(AnyObjectOrLeaf(type, selection));
+
+const NonNullOutputType = (
   type: Exclude<GraphQLOutputType, GraphQLNonNull<any>>,
   selection?: InlineSelection
-): OutputType =>
-  isListType(type)
-    ? List(OutputType(type.ofType, selection))
-    : selection != undefined
-      ? selection
-      : isEnumType(type)
-        ? Enum(type.name)
-        : Scalar(type.name);
+): NonNullType<AnyObject | Leaf> =>
+  isListType(type) ? List(NonListOutputType(type.ofType, selection)) : AnyObjectOrLeaf(type, selection);
 
 const OutputType = (type: GraphQLOutputType, selection?: InlineSelection): OutputType =>
-  isNonNullType(type)
-    ? typeIgnoringNonNull(type.ofType, selection)
-    : Maybe(typeIgnoringNonNull(type, selection));
+  isNonNullType(type) ? NonNullOutputType(type.ofType, selection) : Maybe(NonNullOutputType(type, selection));
+
+const InputObjectOrLeaf = (
+  type: Exclude<GraphQLInputType, GraphQLList<any> | GraphQLNonNull<any>>
+): InputObject | Leaf => (isInputObjectType(type) ? InputObject(type.name) : Leaf(type));
+
+const NonListInputType = (
+  type: Exclude<GraphQLInputType, GraphQLList<any>>
+): NonListType<InputObject | Leaf> =>
+  isNonNullType(type) ? InputObjectOrLeaf(type.ofType) : Maybe(InputObjectOrLeaf(type));
+
+const NonNullInputType = (
+  type: Exclude<GraphQLInputType, GraphQLNonNull<any>>
+): NonNullType<InputObject | Leaf> =>
+  isListType(type) ? List(NonListInputType(type.ofType)) : InputObjectOrLeaf(type);
+
+export const InputType = (type: GraphQLInputType): InputType =>
+  isNonNullType(type) ? NonNullInputType(type.ofType) : Maybe(NonNullInputType(type));
 
 const Field = (field: CompilerField): Field => ({
   name: field.alias ? field.alias : field.name,

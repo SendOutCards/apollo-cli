@@ -3,21 +3,16 @@ import { BasicGeneratedFile } from 'apollo-codegen-core/lib/utilities/CodeGenera
 import { CompilerContext } from 'apollo-codegen-core/lib/compiler';
 
 import Printer from './printer';
-import * as path from 'path';
 
 import {
-  importDeclarationForFragmentRawString,
-  typeAliasDeclarationForFragment,
-  typeAliasDeclarationForOperation,
-  variableDeclarationForOperation,
   typeAliasDeclarationForGraphQLInputObjectType,
   variableDeclarationForGraphQLInputObjectType,
   enumDeclarationForGraphQLEnumType,
-  exportDeclaration,
-  importDeclarationForOperationRawString,
-  globalImportDeclarationForFragmentDependencies
+  exportDeclaration
 } from './types';
-import { isInputObjectType, isEnumType } from 'graphql';
+import { isEnumType, isInputObjectType } from 'graphql';
+import { operationFile } from './operationFile';
+import { fragmentFile } from './fragmentFile';
 
 class TypescriptGeneratedFile implements BasicGeneratedFile {
   fileContents: string;
@@ -41,28 +36,20 @@ interface IGeneratedFile {
   content: (options?: IGeneratedFileOptions) => TypescriptGeneratedFile;
 }
 
-const globalImportPath = (outputPath: string, globalSourcePath: string) =>
-  path.relative(
-    path.dirname(outputPath),
-    path.join(path.dirname(globalSourcePath), path.basename(globalSourcePath, '.ts'))
-  );
-
 export function generateLocalSource(context: CompilerContext): IGeneratedFile[] {
   return Object.values(context.fragments)
     .map(fragment => ({
       sourcePath: fragment.filePath,
       fileName: `${fragment.fragmentName}.ts`,
       content: (options?: IGeneratedFileOptions) => {
-        return new TypescriptGeneratedFile(
-          (options &&
-            options.outputPath &&
-            options.globalSourcePath &&
-            `${fragment.filePath}\n${options.outputPath}\n${options.globalSourcePath}\n${globalImportPath(
-              options.outputPath,
-              options.globalSourcePath
-            )}`) ||
-            ''
-        );
+        const printer = new Printer();
+        if (options && options.outputPath && options.globalSourcePath) {
+          fragmentFile(fragment, options.outputPath, options.globalSourcePath, context).forEach(printable =>
+            printer.enqueue(printable)
+          );
+        }
+        const result = printer.print();
+        return new TypescriptGeneratedFile(result);
       }
     }))
     .concat(
@@ -70,20 +57,27 @@ export function generateLocalSource(context: CompilerContext): IGeneratedFile[] 
         sourcePath: operation.filePath,
         fileName: `${operation.operationName}.ts`,
         content: (options?: IGeneratedFileOptions) => {
-          return new TypescriptGeneratedFile(
-            (options &&
-              options.outputPath &&
-              options.globalSourcePath &&
-              globalImportPath(options.outputPath, options.globalSourcePath)) ||
-              ''
-          );
+          const printer = new Printer();
+          if (options && options.outputPath && options.globalSourcePath) {
+            operationFile(operation, options.outputPath, options.globalSourcePath, context).forEach(
+              printable => printer.enqueue(printable)
+            );
+          }
+          const result = printer.print();
+          return new TypescriptGeneratedFile(result);
         }
       }))
     );
 }
 
+const globalTypes = `export type Maybe<T> = T | null;
+export type Optional<T> = Maybe<T> | undefined;
+export type If<T, V> = { __typename: T } & V;
+export type Operation<Data> = { query: string; variables?: any };`;
+
 export function generateGlobalSource(context: CompilerContext): TypescriptGeneratedFile {
   const printer = new Printer();
+  printer.enqueue(globalTypes);
   context.typesUsed.forEach(type => {
     if (isEnumType(type)) {
       printer.enqueue(exportDeclaration(enumDeclarationForGraphQLEnumType(type)));
@@ -92,21 +86,6 @@ export function generateGlobalSource(context: CompilerContext): TypescriptGenera
       printer.enqueue(exportDeclaration(variableDeclarationForGraphQLInputObjectType(type)));
     }
   });
-  for (const key in context.fragments) {
-    const fragment = context.fragments[key];
-    printer.enqueue(importDeclarationForFragmentRawString(fragment));
-    const globalImport = globalImportDeclarationForFragmentDependencies(fragment);
-    if (globalImport) {
-      printer.enqueue(globalImport);
-    }
-    printer.enqueue(exportDeclaration(typeAliasDeclarationForFragment(fragment)));
-  }
-  for (const key in context.operations) {
-    const operation = context.operations[key];
-    printer.enqueue(importDeclarationForOperationRawString(operation));
-    printer.enqueue(exportDeclaration(typeAliasDeclarationForOperation(operation)));
-    printer.enqueue(exportDeclaration(variableDeclarationForOperation(operation)));
-  }
   const result = printer.print();
   return new TypescriptGeneratedFile(result);
 }
