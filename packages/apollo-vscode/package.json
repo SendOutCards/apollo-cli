@@ -1,14 +1,14 @@
 {
-  "name": "apollo-vscode",
+  "name": "@brad.hilton/apollo-vscode",
   "displayName": "Apollo GraphQL",
   "description": "A VS Code extension for Apollo GraphQL projects",
   "private": true,
   "author": "Apollo GraphQL",
   "license": "MIT",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "repository": {
     "type": "git",
-    "url": "apollographql/apollo-cli"
+    "url": "SendOutCards/apollo-cli"
   },
   "engines": {
     "vscode": "^1.23.0"

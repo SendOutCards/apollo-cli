@@ -1,13 +1,13 @@
 {
-  "name": "apollo-language-server",
+  "name": "@brad.hilton/apollo-language-server",
   "description": "A language server for Apollo GraphQL projects",
   "private": true,
   "author": "Apollo GraphQL",
   "license": "MIT",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "repository": {
     "type": "git",
-    "url": "apollographql/apollo-cli"
+    "url": "SendOutCards/apollo-cli"
   },
   "engines": {
     "node": "*"
