@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "apollographql/apollo-cli"
+    "url": "SendOutCards/apollo-cli"
   },
   "author": "Martijn Walraven <martijn@martijnwalraven.com>",
   "license": "MIT",
@@ -24,7 +24,7 @@
     "lerna-changelog": "^0.8.0"
   },
   "changelog": {
-    "repo": "apollographql/apollo-cli",
+    "repo": "SendOutCards/apollo-cli",
     "labels": {
       "breaking": ":boom: Breaking Change",
       "feature": ":rocket: Feature",
