@@ -1,7 +1,7 @@
 {
-  "name": "@brad.hilton/apollo",
+  "name": "apollo",
   "description": "CLI for apollographql",
-  "version": "1.7.3",
+  "version": "1.7.2",
   "author": "opensource@apollographql.com",
   "bin": {
     "apollo": "./bin/run"
@@ -112,7 +112,7 @@
     ],
     "testEnvironment": "node"
   },
-  "repository": "SendOutCards/apollo-cli",
+  "repository": "apollographql/apollo-cli",
   "scripts": {
     "clean": "rm -rf lib",
     "prebuild": "npm run clean",
