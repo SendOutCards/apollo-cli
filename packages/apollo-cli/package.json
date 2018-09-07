@@ -1,5 +1,5 @@
 {
-  "name": "@brad.hilton/apollo",
+  "name": "apollo",
   "description": "CLI for apollographql",
   "version": "1.7.1",
   "author": "opensource@apollographql.com",
@@ -8,7 +8,6 @@
   },
   "bugs": "https://github.com/apollographql/apollo-cli/issues",
   "dependencies": {
-    "@brad.hilton/apollo-codegen-typescript": "^0.27.0",
     "@oclif/command": "^1.4.21",
     "@oclif/config": "^1.6.17",
     "@oclif/plugin-help": "^1.2.11",
@@ -24,6 +23,7 @@
     "apollo-codegen-flow-legacy": "^0.27.0",
     "apollo-codegen-scala": "^0.27.0",
     "apollo-codegen-swift": "^0.27.0",
+    "apollo-codegen-typescript": "^0.27.0",
     "apollo-codegen-typescript-legacy": "^0.27.0",
     "apollo-link": "^1.2.2",
     "apollo-link-http": "^1.5.4",
@@ -112,7 +112,7 @@
     ],
     "testEnvironment": "node"
   },
-  "repository": "SendOutCards/apollo-cli",
+  "repository": "apollographql/apollo-cli",
   "scripts": {
     "clean": "rm -rf lib",
     "prebuild": "npm run clean",
