@@ -6,10 +6,10 @@ import Printer from './printer';
 
 import {
   typeAliasDeclarationForGraphQLInputObjectType,
-  variableDeclarationForGraphQLInputObjectType,
   enumDeclarationForGraphQLEnumType,
   exportDeclaration
 } from './types';
+import { constructorDeclarationForGraphQLInputObjectType } from './constructors';
 import { isEnumType, isInputObjectType } from 'graphql';
 import { operationFile } from './operationFile';
 import { fragmentFile } from './fragmentFile';
@@ -83,7 +83,7 @@ export function generateGlobalSource(context: CompilerContext): TypescriptGenera
       printer.enqueue(exportDeclaration(enumDeclarationForGraphQLEnumType(type)));
     } else if (isInputObjectType(type)) {
       printer.enqueue(exportDeclaration(typeAliasDeclarationForGraphQLInputObjectType(type)));
-      printer.enqueue(exportDeclaration(variableDeclarationForGraphQLInputObjectType(type)));
+      printer.enqueue(exportDeclaration(constructorDeclarationForGraphQLInputObjectType(type)));
     }
   });
   const result = printer.print();

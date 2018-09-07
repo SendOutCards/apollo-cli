@@ -80,7 +80,7 @@ const allDependencies = (
   variables?: { name: string; type: GraphQLType }[]
 ): Dependency[] =>
   inlineSelectionDependencies(InlineSelection(selectionSet)).concat(
-    variables ? variables.flatMap(variableDependencies) : []
+    variables ? variables.flatMap(variableDependencies).concat(globalDependency('Operation')) : []
   );
 
 const mapDependencies = (dependencies: Dependency[]): Dependencies => ({

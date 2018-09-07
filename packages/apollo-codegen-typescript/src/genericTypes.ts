@@ -29,3 +29,5 @@ export const IfType = (possibleTypes: Set<string>, type: TSType): TSType =>
   );
 
 export const OptionalType = (type: TSType): TSType => GenericType('Optional', type);
+
+export const OperationType = (type: TSType): TSType => GenericType('Operation', type);

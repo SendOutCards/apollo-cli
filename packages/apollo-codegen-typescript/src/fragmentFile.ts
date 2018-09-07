@@ -1,6 +1,5 @@
 import { Printable } from './printer';
 import {
-  importDeclarationsForDependencies,
   rawStringImportDeclaration,
   stringDeclaration,
   exportDeclaration,
@@ -8,6 +7,7 @@ import {
 } from './types';
 
 import Dependencies from './dependencies';
+import dependencyImports from './dependencyImports';
 
 import { Fragment, CompilerContext } from 'apollo-codegen-core/lib/compiler';
 
@@ -18,7 +18,7 @@ export const fragmentFile = (
   context: CompilerContext
 ): Printable[] =>
   ((dependencies: Dependencies) => [
-    ...importDeclarationsForDependencies(dependencies, outputPath, globalSourcePath, context),
+    ...dependencyImports(dependencies, outputPath, globalSourcePath, context),
     rawStringImportDeclaration(fragment.fragmentName, fragment.filePath, outputPath),
     exportDeclaration(stringDeclaration(fragment.fragmentName, dependencies.fragments)),
     exportDeclaration(typeAliasDeclarationForFragment(fragment))

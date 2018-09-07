@@ -1,13 +1,11 @@
-import { SelectionSet, Fragment, Operation, CompilerContext } from 'apollo-codegen-core/lib/compiler';
+import { SelectionSet, Fragment, Operation } from 'apollo-codegen-core/lib/compiler';
 
 import { Set } from 'immutable';
 
 import { camelCase } from 'lodash';
 
 import {
-  GraphQLType,
   GraphQLEnumType,
-  GraphQLInputType,
   GraphQLInputObjectType,
   GraphQLEnumValue,
   GraphQLInputFieldMap,
@@ -30,25 +28,16 @@ import {
   TSTypeLiteral,
   TSTypeAnnotation,
   stringLiteral,
-  LVal,
-  arrowFunctionExpression,
-  ObjectExpression,
   TSEnumDeclaration,
   TSEnumMember,
   Declaration,
   exportNamedDeclaration,
   importDeclaration,
   importDefaultSpecifier,
-  importSpecifier,
-  ImportDeclaration,
   variableDeclaration,
   variableDeclarator,
-  parenthesizedExpression,
-  objectExpression,
   Identifier,
-  objectProperty,
   ImportDefaultSpecifier,
-  ImportSpecifier,
   arrayExpression,
   callExpression,
   memberExpression
@@ -63,14 +52,13 @@ import {
   InputType,
   Scalar
 } from './intermediates';
-import Dependencies from './dependencies';
 import { OptionalType, MaybeType, IfType, PartialType } from './genericTypes';
-import { relativePath, outputPath } from './paths';
+import { relativePath } from './paths';
 
-const typeReference = (name: string): TSTypeReference => TSTypeReference(identifier(name));
+export const typeReference = (name: string): TSTypeReference => TSTypeReference(identifier(name));
 
-const typeForScalarName = (scalarName: string): TSType => {
-  switch (scalarName) {
+const typeForScalar = (scalar: Scalar): TSType => {
+  switch (scalar.name) {
     case 'Int':
     case 'Float':
       return TSNumberKeyword();
@@ -81,9 +69,7 @@ const typeForScalarName = (scalarName: string): TSType => {
   }
 };
 
-const typeForScalar = (type: Scalar): TSType => typeForScalarName(type.name);
-
-const typeForInputType = (type: InputType): TSType => {
+export const typeForInputType = (type: InputType): TSType => {
   switch (type.kind) {
     case 'Maybe':
       return OptionalType(typeForInputType(type.ofType));
@@ -170,56 +156,21 @@ const typeForGraphQLInputFieldMap = (map: GraphQLInputFieldMap) =>
 export const typeAliasDeclarationForGraphQLInputObjectType = (type: GraphQLInputObjectType) =>
   TSTypeAliasDeclaration(identifier(type.name), undefined, typeForGraphQLInputFieldMap(type.getFields()));
 
-const objectPropertyForGraphQLInputField = (field: GraphQLInputField) =>
-  objectProperty(identifier(field.name), identifier(field.name), false, true);
-
-const lvalForGraphQLInputField = (field: GraphQLInputField) =>
-  typedIdentifier(field.name, typeForInputType(InputType(field.type)));
-
-const arrowFunctionExpressionForGraphQLInputFields = (fields: GraphQLInputField[]) =>
-  arrowFunctionExpression(
-    fields.map(lvalForGraphQLInputField),
-    parenthesizedExpression(objectExpression(fields.map(objectPropertyForGraphQLInputField)))
-  );
-
-export const variableDeclarationForGraphQLInputObjectType = (type: GraphQLInputObjectType) =>
-  variableDeclaration('const', [
-    variableDeclarator(
-      identifier(type.name),
-      arrowFunctionExpressionForGraphQLInputFields(Object.values(type.getFields()))
-    )
-  ]);
-
-const rawStringIdentifier = (fragmentOrOperationName: string): Identifier =>
-  identifier(camelCase(fragmentOrOperationName + 'RawString'));
-
-const stringIdentifier = (fragmentOrOperationName: string): Identifier =>
-  identifier(camelCase(fragmentOrOperationName + 'String'));
-
-const rawStringImportDefaultSpecifier = (fragmentOrOperationName: string): ImportDefaultSpecifier =>
-  importDefaultSpecifier(rawStringIdentifier(fragmentOrOperationName));
-
-const importSpecifierWithIdentifier = (identifier: Identifier): ImportSpecifier =>
-  importSpecifier(identifier, identifier);
-
-const stringImportSpecifier = (fragmentName: string): ImportSpecifier =>
-  importSpecifierWithIdentifier(stringIdentifier(fragmentName));
-
-const importDeclarationForGlobalDependencies = (
-  dependencies: string[],
-  relativeGlobalSourcePath: string
-): ImportDeclaration =>
-  importDeclaration(
-    dependencies.map(dependency => importSpecifierWithIdentifier(identifier(dependency))),
-    stringLiteral(relativeGlobalSourcePath)
-  );
-
 export const typeAliasDeclarationForFragment = (fragment: Fragment) =>
   TSTypeAliasDeclaration(
     identifier(fragment.fragmentName),
     undefined,
     typeForSelectionSet(fragment.selectionSet)
   );
+
+export const typeAliasDeclarationForOperation = (operation: Operation) =>
+  TSTypeAliasDeclaration(
+    identifier(operation.operationName),
+    undefined,
+    typeForSelectionSet(operation.selectionSet)
+  );
+
+export const exportDeclaration = (expression: Declaration) => exportNamedDeclaration(expression, []);
 
 export const rawStringImportDeclaration = (
   fragmentOrOperationName: string,
@@ -248,70 +199,11 @@ export const stringDeclaration = (fragmentOrOperationName: string, fragmentDepen
     )
   ]);
 
-export const typeAliasDeclarationForOperation = (operation: Operation) =>
-  TSTypeAliasDeclaration(
-    identifier(operation.operationName),
-    undefined,
-    typeForSelectionSet(operation.selectionSet)
-  );
+const rawStringIdentifier = (fragmentOrOperationName: string): Identifier =>
+  identifier(camelCase(fragmentOrOperationName + 'RawString'));
 
-const typedIdentifier = (name: string, type: TSType): Identifier => ({
-  ...identifier(name),
-  typeAnnotation: TSTypeAnnotation(type) as any
-});
+export const stringIdentifier = (fragmentOrOperationName: string): Identifier =>
+  identifier(camelCase(fragmentOrOperationName + 'String'));
 
-const lvalForVariable = (variable: { name: string; type: GraphQLType }): LVal =>
-  typedIdentifier(variable.name, typeForInputType(InputType(variable.type as GraphQLInputType)));
-
-const objectExpressionForOperation = (operation: Operation): ObjectExpression =>
-  objectExpression([
-    objectProperty(identifier('query'), stringIdentifier(operation.operationName)),
-    objectProperty(
-      identifier('variables'),
-      objectExpression(
-        operation.variables.map(variable =>
-          objectProperty(identifier(variable.name), identifier(variable.name), false, true)
-        )
-      )
-    )
-  ]);
-
-export const variableDeclarationForOperation = (operation: Operation) =>
-  variableDeclaration('const', [
-    variableDeclarator(
-      identifier(operation.operationName),
-      arrowFunctionExpression(
-        operation.variables.map(lvalForVariable),
-        parenthesizedExpression(objectExpressionForOperation(operation))
-      )
-    )
-  ]);
-
-export const exportDeclaration = (expression: Declaration) => exportNamedDeclaration(expression, []);
-
-const importDeclarationForFragmentDependency = (fragment: Fragment, filePath: string): ImportDeclaration =>
-  importDeclaration(
-    [
-      importSpecifierWithIdentifier(identifier(fragment.fragmentName)),
-      stringImportSpecifier(fragment.fragmentName)
-    ],
-    stringLiteral(relativePath(filePath, outputPath(fragment.fragmentName, fragment.filePath)))
-  );
-
-export const importDeclarationsForDependencies = (
-  dependencies: Dependencies,
-  outputPath: string,
-  globalSourcePath: string,
-  context: CompilerContext
-): ImportDeclaration[] =>
-  [
-    dependencies.global.length > 0
-      ? importDeclarationForGlobalDependencies(
-          dependencies.global,
-          relativePath(outputPath, globalSourcePath)
-        )
-      : undefined,
-    ...dependencies.fragments.map(fragment =>
-      importDeclarationForFragmentDependency(context.fragments[fragment], outputPath)
-    )
-  ].filter(declaration => declaration) as ImportDeclaration[];
+const rawStringImportDefaultSpecifier = (fragmentOrOperationName: string): ImportDefaultSpecifier =>
+  importDefaultSpecifier(rawStringIdentifier(fragmentOrOperationName));

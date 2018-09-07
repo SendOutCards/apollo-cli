@@ -1,14 +1,17 @@
 import { Printable } from './printer';
 import { Operation, CompilerContext } from 'apollo-codegen-core/lib/compiler';
+
 import {
   rawStringImportDeclaration,
   exportDeclaration,
   typeAliasDeclarationForOperation,
-  variableDeclarationForOperation,
-  importDeclarationsForDependencies,
   stringDeclaration
 } from './types';
+
+import { constructorDeclarationForOperation } from './constructors';
+
 import Dependencies from './dependencies';
+import dependencyImports from './dependencyImports';
 
 export const operationFile = (
   operation: Operation,
@@ -17,9 +20,9 @@ export const operationFile = (
   context: CompilerContext
 ): Printable[] =>
   ((dependencies: Dependencies) => [
-    ...importDeclarationsForDependencies(dependencies, outputPath, globalSourcePath, context),
+    ...dependencyImports(dependencies, outputPath, globalSourcePath, context),
     rawStringImportDeclaration(operation.operationName, operation.filePath, outputPath),
     stringDeclaration(operation.operationName, dependencies.fragments),
     exportDeclaration(typeAliasDeclarationForOperation(operation)),
-    exportDeclaration(variableDeclarationForOperation(operation))
+    exportDeclaration(constructorDeclarationForOperation(operation))
   ])(Dependencies(operation.selectionSet, operation.variables));

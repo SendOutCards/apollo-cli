@@ -4,7 +4,7 @@ exports[`Typescript newCodeGeneration duplicates 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import { Maybe, EnumCommentTestCase, Duplicate } from \\"../../__generated__/globalTypes\\";
+      "fileContents": "import { Maybe, EnumCommentTestCase, Duplicate, Operation } from \\"../../__generated__/globalTypes\\";
 
 import duplicatesRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
@@ -17,7 +17,7 @@ export type duplicates = {
   };
 };
 
-export const duplicates = (a: EnumCommentTestCase, b: EnumCommentTestCase, c: Duplicate) => ({
+export const duplicates = (a: EnumCommentTestCase, b: EnumCommentTestCase, c: Duplicate): Operation<duplicates> => ({
   query: duplicatesString,
   variables: {
     a,
@@ -50,7 +50,7 @@ export type Duplicate = {
   propB: EnumCommentTestCase[];
 };
 
-export const Duplicate = (propA: EnumCommentTestCase, propB: EnumCommentTestCase[]) => ({
+export const Duplicate = (propA: EnumCommentTestCase, propB: EnumCommentTestCase[]): Duplicate => ({
   propA,
   propB
 });
@@ -99,7 +99,7 @@ export type DroidFragment = {
   },
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import { Maybe, Optional, Episode } from \\"../../__generated__/globalTypes\\";
+      "fileContents": "import { Maybe, Optional, Episode, Operation } from \\"../../__generated__/globalTypes\\";
 
 import { HumanFragment, humanFragmentString } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/HumanFragment\\";
 
@@ -116,7 +116,7 @@ export type HeroName = {
   } & (If<\\"Human\\", HumanFragment> | If<\\"Droid\\", DroidFragment>)>;
 };
 
-export const HeroName = (episode: Optional<Episode>) => ({
+export const HeroName = (episode: Optional<Episode>): Operation<HeroName> => ({
   query: heroNameString,
   variables: {
     episode
@@ -250,7 +250,7 @@ exports[`Typescript newCodeGeneration handles multiline graphql comments 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import { Maybe } from \\"../../__generated__/globalTypes\\";
+      "fileContents": "import { Maybe, Operation } from \\"../../__generated__/globalTypes\\";
 
 import customScalarRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
@@ -262,9 +262,8 @@ export type CustomScalar = {
   }>;
 };
 
-export const CustomScalar = () => ({
-  query: customScalarString,
-  variables: {}
+export const CustomScalar = (): Operation<CustomScalar> => ({
+  query: customScalarString
 });
 ",
     },
@@ -288,7 +287,7 @@ exports[`Typescript newCodeGeneration inline fragment 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import { Maybe, Optional, Episode } from \\"../../__generated__/globalTypes\\";
+      "fileContents": "import { Maybe, Optional, Episode, Operation } from \\"../../__generated__/globalTypes\\";
 
 import heroInlineFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
@@ -301,7 +300,7 @@ export type HeroInlineFragment = {
   }>;
 };
 
-export const HeroInlineFragment = (episode: Optional<Episode>) => ({
+export const HeroInlineFragment = (episode: Optional<Episode>): Operation<HeroInlineFragment> => ({
   query: heroInlineFragmentString,
   variables: {
     episode
@@ -335,7 +334,7 @@ exports[`Typescript newCodeGeneration inline fragment on type conditions 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import { Maybe, Episode, Optional } from \\"../../__generated__/globalTypes\\";
+      "fileContents": "import { Maybe, Episode, Optional, Operation } from \\"../../__generated__/globalTypes\\";
 
 import heroNameRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
@@ -355,7 +354,7 @@ export type HeroName = {
   }>)>;
 };
 
-export const HeroName = (episode: Optional<Episode>) => ({
+export const HeroName = (episode: Optional<Episode>): Operation<HeroName> => ({
   query: heroNameString,
   variables: {
     episode
@@ -389,7 +388,7 @@ exports[`Typescript newCodeGeneration inline fragment on type conditions with di
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import { Maybe, Episode, Optional } from \\"../../__generated__/globalTypes\\";
+      "fileContents": "import { Maybe, Episode, Optional, Operation } from \\"../../__generated__/globalTypes\\";
 
 import heroNameRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
@@ -412,7 +411,7 @@ export type HeroName = {
   }>)>;
 };
 
-export const HeroName = (episode: Optional<Episode>) => ({
+export const HeroName = (episode: Optional<Episode>): Operation<HeroName> => ({
   query: heroNameString,
   variables: {
     episode
@@ -446,7 +445,7 @@ exports[`Typescript newCodeGeneration multiple nested list enum 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import { Maybe } from \\"../../__generated__/globalTypes\\";
+      "fileContents": "import { Maybe, Operation } from \\"../../__generated__/globalTypes\\";
 
 import nestingRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
@@ -458,9 +457,8 @@ export type nesting = {
   };
 };
 
-export const nesting = () => ({
-  query: nestingString,
-  variables: {}
+export const nesting = (): Operation<nesting> => ({
+  query: nestingString
 });
 ",
     },
@@ -489,7 +487,9 @@ exports[`Typescript newCodeGeneration multiple nested non-null list enum 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import nestingRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
+      "fileContents": "import { Operation } from \\"../../__generated__/globalTypes\\";
+
+import nestingRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
 const nestingString = [nestingRawString].join(\\"\\\\n\\\\n\\");
 
@@ -499,9 +499,8 @@ export type nesting = {
   };
 };
 
-export const nesting = () => ({
-  query: nestingString,
-  variables: {}
+export const nesting = (): Operation<nesting> => ({
+  query: nestingString
 });
 ",
     },
@@ -544,7 +543,7 @@ export type SimpleFragment = {
   },
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import { Maybe, Optional, Episode } from \\"../../__generated__/globalTypes\\";
+      "fileContents": "import { Maybe, Optional, Episode, Operation } from \\"../../__generated__/globalTypes\\";
 
 import { SimpleFragment, simpleFragmentString } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/SimpleFragment\\";
 
@@ -558,7 +557,7 @@ export type HeroFragment = {
   }>;
 };
 
-export const HeroFragment = (episode: Optional<Episode>) => ({
+export const HeroFragment = (episode: Optional<Episode>): Operation<HeroFragment> => ({
   query: heroFragmentString,
   variables: {
     episode
@@ -621,7 +620,7 @@ exports[`Typescript newCodeGeneration simple hero query 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import { Maybe, Optional, Episode } from \\"../../__generated__/globalTypes\\";
+      "fileContents": "import { Maybe, Optional, Episode, Operation } from \\"../../__generated__/globalTypes\\";
 
 import heroNameRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
@@ -634,7 +633,7 @@ export type HeroName = {
   }>;
 };
 
-export const HeroName = (episode: Optional<Episode>) => ({
+export const HeroName = (episode: Optional<Episode>): Operation<HeroName> => ({
   query: heroNameString,
   variables: {
     episode
@@ -668,7 +667,7 @@ exports[`Typescript newCodeGeneration simple mutation 1`] = `
 Array [
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import { Maybe, Optional, Episode, ReviewInput } from \\"../../__generated__/globalTypes\\";
+      "fileContents": "import { Maybe, Optional, Episode, ReviewInput, Operation } from \\"../../__generated__/globalTypes\\";
 
 import reviewMovieRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
@@ -681,7 +680,7 @@ export type ReviewMovie = {
   }>;
 };
 
-export const ReviewMovie = (episode: Optional<Episode>, review: Optional<ReviewInput>) => ({
+export const ReviewMovie = (episode: Optional<Episode>, review: Optional<ReviewInput>): Operation<ReviewMovie> => ({
   query: reviewMovieString,
   variables: {
     episode,
@@ -715,7 +714,7 @@ export type ReviewInput = {
   favorite_color: Optional<ColorInput>;
 };
 
-export const ReviewInput = (stars: number, commentary: Optional<string>, favorite_color: Optional<ColorInput>) => ({
+export const ReviewInput = (stars: number, commentary: Optional<string>, favorite_color: Optional<ColorInput>): ReviewInput => ({
   stars,
   commentary,
   favorite_color
@@ -727,7 +726,7 @@ export type ColorInput = {
   blue: number;
 };
 
-export const ColorInput = (red: number, green: number, blue: number) => ({
+export const ColorInput = (red: number, green: number, blue: number): ColorInput => ({
   red,
   green,
   blue
