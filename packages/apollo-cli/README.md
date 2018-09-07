@@ -5,39 +5,43 @@
 Apollo CLI brings together your GraphQL clients and servers with tools for validating your schema, linting your operations for compatibility with your server, and generating static types for improved client-side type safety.
 
 <!-- toc -->
-* [Apollo CLI](#apollo-cli)
-* [Usage](#usage)
-* [Commands](#commands)
-* [Configuration](#configuration)
-* [Code Generation](#code-generation)
-* [Contributing](#contributing)
-<!-- tocstop -->
+
+- [Apollo CLI](#apollo-cli)
+- [Usage](#usage)
+- [Commands](#commands)
+- [Configuration](#configuration)
+- [Code Generation](#code-generation)
+- [Contributing](#contributing)
+  <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
+
 ```sh-session
 $ npm install -g apollo
 $ apollo COMMAND
 running command...
 $ apollo (-v|--version|version)
-apollo/1.7.2 darwin-x64 node-v8.11.1
+apollo/1.7.1 darwin-x64 node-v10.8.0
 $ apollo --help [COMMAND]
 USAGE
   $ apollo COMMAND
 ...
 ```
+
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-* [`apollo codegen:generate [OUTPUT]`](#apollo-codegengenerate-output)
-* [`apollo help [COMMAND]`](#apollo-help-command)
-* [`apollo queries:check`](#apollo-queriescheck)
-* [`apollo schema:check`](#apollo-schemacheck)
-* [`apollo schema:download OUTPUT`](#apollo-schemadownload-output)
-* [`apollo schema:publish`](#apollo-schemapublish)
+
+- [`apollo codegen:generate [OUTPUT]`](#apollo-codegengenerate-output)
+- [`apollo help [COMMAND]`](#apollo-help-command)
+- [`apollo queries:check`](#apollo-queriescheck)
+- [`apollo schema:check`](#apollo-schemacheck)
+- [`apollo schema:download OUTPUT`](#apollo-schemadownload-output)
+- [`apollo schema:publish`](#apollo-schemapublish)
 
 ## `apollo codegen:generate [OUTPUT]`
 
@@ -51,11 +55,11 @@ ARGUMENTS
   OUTPUT
       Directory to which generated files will be written.
       - For TypeScript/Flow generators, this specifies a directory relative to each source file by default.
-      - For TypeScript/Flow generators with the "outputFlat" flag is set, and for the Swift generator, this specifies a 
+      - For TypeScript/Flow generators with the "outputFlat" flag is set, and for the Swift generator, this specifies a
       file or directory (absolute or relative to the current working directory) to which:
          - a file will be written for each query (if "output" is a directory)
          - all generated types will be written
-      - For all other types, this defines a file (absolute or relative to the current working directory) to which all 
+      - For all other types, this defines a file (absolute or relative to the current working directory) to which all
       generated types are written.
 
 OPTIONS
@@ -205,6 +209,7 @@ OPTIONS
 ```
 
 _See code: [src/commands/schema/publish.ts](https://github.com/apollographql/apollo-cli/blob/master/packages/apollo-cli/src/commands/schema/publish.ts)_
+
 <!-- commandsstop -->
 
 # Configuration
@@ -361,12 +366,12 @@ Apollo Codegen will generate a union type for Character.
 export type CharactersQuery = {
   characters: Array<
     | {
-        __typename: "Human",
+        __typename: 'Human',
         name: string,
         homePlanet: ?string
       }
     | {
-        __typename: "Droid",
+        __typename: 'Droid',
         name: string,
         primaryFunction: ?string
       }
@@ -380,20 +385,10 @@ This type can then be used as follows to ensure that all possible types are hand
 function CharacterFigures({ characters }: CharactersQuery) {
   return characters.map(character => {
     switch (character.__typename) {
-      case "Human":
-        return (
-          <HumanFigure
-            homePlanet={character.homePlanet}
-            name={character.name}
-          />
-        );
-      case "Droid":
-        return (
-          <DroidFigure
-            primaryFunction={character.primaryFunction}
-            name={character.name}
-          />
-        );
+      case 'Human':
+        return <HumanFigure homePlanet={character.homePlanet} name={character.name} />;
+      case 'Droid':
+        return <DroidFigure primaryFunction={character.primaryFunction} name={character.name} />;
     }
   });
 }
