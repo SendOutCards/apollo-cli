@@ -5,43 +5,39 @@
 Apollo CLI brings together your GraphQL clients and servers with tools for validating your schema, linting your operations for compatibility with your server, and generating static types for improved client-side type safety.
 
 <!-- toc -->
-
-- [Apollo CLI](#apollo-cli)
-- [Usage](#usage)
-- [Commands](#commands)
-- [Configuration](#configuration)
-- [Code Generation](#code-generation)
-- [Contributing](#contributing)
-  <!-- tocstop -->
+* [Apollo CLI](#apollo-cli)
+* [Usage](#usage)
+* [Commands](#commands)
+* [Configuration](#configuration)
+* [Code Generation](#code-generation)
+* [Contributing](#contributing)
+<!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
-$ npm install -g apollo
+$ npm install -g @brad.hilton/apollo
 $ apollo COMMAND
 running command...
 $ apollo (-v|--version|version)
-apollo/1.7.1 darwin-x64 node-v10.8.0
+@brad.hilton/apollo/1.7.2 darwin-x64 node-v8.11.1
 $ apollo --help [COMMAND]
 USAGE
   $ apollo COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [`apollo codegen:generate [OUTPUT]`](#apollo-codegengenerate-output)
-- [`apollo help [COMMAND]`](#apollo-help-command)
-- [`apollo queries:check`](#apollo-queriescheck)
-- [`apollo schema:check`](#apollo-schemacheck)
-- [`apollo schema:download OUTPUT`](#apollo-schemadownload-output)
-- [`apollo schema:publish`](#apollo-schemapublish)
+* [`apollo codegen:generate [OUTPUT]`](#apollo-codegengenerate-output)
+* [`apollo help [COMMAND]`](#apollo-help-command)
+* [`apollo queries:check`](#apollo-queriescheck)
+* [`apollo schema:check`](#apollo-schemacheck)
+* [`apollo schema:download OUTPUT`](#apollo-schemadownload-output)
+* [`apollo schema:publish`](#apollo-schemapublish)
 
 ## `apollo codegen:generate [OUTPUT]`
 
@@ -55,11 +51,11 @@ ARGUMENTS
   OUTPUT
       Directory to which generated files will be written.
       - For TypeScript/Flow generators, this specifies a directory relative to each source file by default.
-      - For TypeScript/Flow generators with the "outputFlat" flag is set, and for the Swift generator, this specifies a
+      - For TypeScript/Flow generators with the "outputFlat" flag is set, and for the Swift generator, this specifies a 
       file or directory (absolute or relative to the current working directory) to which:
          - a file will be written for each query (if "output" is a directory)
          - all generated types will be written
-      - For all other types, this defines a file (absolute or relative to the current working directory) to which all
+      - For all other types, this defines a file (absolute or relative to the current working directory) to which all 
       generated types are written.
 
 OPTIONS
@@ -111,7 +107,7 @@ OPTIONS
   --watch                                    Watch the query files to auto-generate on changes.
 ```
 
-_See code: [src/commands/codegen/generate.ts](https://github.com/apollographql/apollo-cli/blob/master/packages/apollo-cli/src/commands/codegen/generate.ts)_
+_See code: [src/commands/codegen/generate.ts](https://github.com/SendOutCards/apollo-cli/blob/master/packages/apollo-cli/src/commands/codegen/generate.ts)_
 
 ## `apollo help [COMMAND]`
 
@@ -149,7 +145,7 @@ OPTIONS
                      GraphQL queries in Javascript/Typescript code
 ```
 
-_See code: [src/commands/queries/check.ts](https://github.com/apollographql/apollo-cli/blob/master/packages/apollo-cli/src/commands/queries/check.ts)_
+_See code: [src/commands/queries/check.ts](https://github.com/SendOutCards/apollo-cli/blob/master/packages/apollo-cli/src/commands/queries/check.ts)_
 
 ## `apollo schema:check`
 
@@ -168,7 +164,7 @@ OPTIONS
   --key=key            The API key for the Apollo Engine service
 ```
 
-_See code: [src/commands/schema/check.ts](https://github.com/apollographql/apollo-cli/blob/master/packages/apollo-cli/src/commands/schema/check.ts)_
+_See code: [src/commands/schema/check.ts](https://github.com/SendOutCards/apollo-cli/blob/master/packages/apollo-cli/src/commands/schema/check.ts)_
 
 ## `apollo schema:download OUTPUT`
 
@@ -189,7 +185,7 @@ OPTIONS
   --key=key            The API key for the Apollo Engine service
 ```
 
-_See code: [src/commands/schema/download.ts](https://github.com/apollographql/apollo-cli/blob/master/packages/apollo-cli/src/commands/schema/download.ts)_
+_See code: [src/commands/schema/download.ts](https://github.com/SendOutCards/apollo-cli/blob/master/packages/apollo-cli/src/commands/schema/download.ts)_
 
 ## `apollo schema:publish`
 
@@ -208,8 +204,7 @@ OPTIONS
   --key=key            The API key for the Apollo Engine service
 ```
 
-_See code: [src/commands/schema/publish.ts](https://github.com/apollographql/apollo-cli/blob/master/packages/apollo-cli/src/commands/schema/publish.ts)_
-
+_See code: [src/commands/schema/publish.ts](https://github.com/SendOutCards/apollo-cli/blob/master/packages/apollo-cli/src/commands/schema/publish.ts)_
 <!-- commandsstop -->
 
 # Configuration
