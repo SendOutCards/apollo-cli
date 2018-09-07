@@ -2,7 +2,7 @@ import { Maybe } from "../../../__generated__/globalTypes";
 
 import addressFragmentRawString from "../AddressFragment.graphql";
 
-export const addressFragmentString = [addressFragmentRawString].join("\n\n");
+export const addressFragmentString = addressFragmentRawString;
 
 export type AddressFragment = {
   firstName: string;

@@ -1,3 +1,5 @@
+import { Operation } from "../../../__generated__/globalTypes";
+
 import { AccountFragment, accountFragmentString } from "../../fragments/__generated__/AccountFragment";
 
 import loadAccountRawString from "../LoadAccount.graphql";
@@ -8,7 +10,6 @@ export type LoadAccount = {
   account: AccountFragment;
 };
 
-export const LoadAccount = () => ({
-  query: loadAccountString,
-  variables: {}
+export const LoadAccount = (): Operation<LoadAccount> => ({
+  query: loadAccountString
 });

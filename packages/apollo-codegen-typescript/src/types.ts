@@ -32,15 +32,7 @@ import {
   TSEnumMember,
   Declaration,
   exportNamedDeclaration,
-  importDeclaration,
-  importDefaultSpecifier,
-  variableDeclaration,
-  variableDeclarator,
-  Identifier,
-  ImportDefaultSpecifier,
-  arrayExpression,
-  callExpression,
-  memberExpression
+  Identifier
 } from '@babel/types';
 
 import {
@@ -53,7 +45,6 @@ import {
   Scalar
 } from './intermediates';
 import { OptionalType, MaybeType, IfType, PartialType } from './genericTypes';
-import { relativePath } from './paths';
 
 export const typeReference = (name: string): TSTypeReference => TSTypeReference(identifier(name));
 
@@ -172,38 +163,5 @@ export const typeAliasDeclarationForOperation = (operation: Operation) =>
 
 export const exportDeclaration = (expression: Declaration) => exportNamedDeclaration(expression, []);
 
-export const rawStringImportDeclaration = (
-  fragmentOrOperationName: string,
-  filePath: string,
-  outputPath: string
-) =>
-  importDeclaration(
-    [rawStringImportDefaultSpecifier(fragmentOrOperationName)],
-    stringLiteral(relativePath(outputPath, filePath))
-  );
-
-export const stringDeclaration = (fragmentOrOperationName: string, fragmentDependencies: string[]) =>
-  variableDeclaration('const', [
-    variableDeclarator(
-      stringIdentifier(fragmentOrOperationName),
-      callExpression(
-        memberExpression(
-          arrayExpression([
-            rawStringIdentifier(fragmentOrOperationName),
-            ...fragmentDependencies.map(fragment => stringIdentifier(fragment))
-          ]),
-          identifier('join')
-        ),
-        [stringLiteral('\n\n')]
-      )
-    )
-  ]);
-
-const rawStringIdentifier = (fragmentOrOperationName: string): Identifier =>
-  identifier(camelCase(fragmentOrOperationName + 'RawString'));
-
 export const stringIdentifier = (fragmentOrOperationName: string): Identifier =>
   identifier(camelCase(fragmentOrOperationName + 'String'));
-
-const rawStringImportDefaultSpecifier = (fragmentOrOperationName: string): ImportDefaultSpecifier =>
-  importDefaultSpecifier(rawStringIdentifier(fragmentOrOperationName));

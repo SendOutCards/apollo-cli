@@ -1,15 +1,11 @@
 import { Printable } from './printer';
-import {
-  rawStringImportDeclaration,
-  stringDeclaration,
-  exportDeclaration,
-  typeAliasDeclarationForFragment
-} from './types';
+import { exportDeclaration, typeAliasDeclarationForFragment } from './types';
 
 import Dependencies from './dependencies';
 import dependencyImports from './dependencyImports';
 
 import { Fragment, CompilerContext } from 'apollo-codegen-core/lib/compiler';
+import stringDeclarations from './stringDeclarations';
 
 export const fragmentFile = (
   fragment: Fragment,
@@ -19,7 +15,6 @@ export const fragmentFile = (
 ): Printable[] =>
   ((dependencies: Dependencies) => [
     ...dependencyImports(dependencies, outputPath, globalSourcePath, context),
-    rawStringImportDeclaration(fragment.fragmentName, fragment.filePath, outputPath),
-    exportDeclaration(stringDeclaration(fragment.fragmentName, dependencies.fragments)),
+    ...stringDeclarations(fragment.fragmentName, fragment.filePath, outputPath, dependencies.fragments, true),
     exportDeclaration(typeAliasDeclarationForFragment(fragment))
   ])(Dependencies(fragment.selectionSet));
