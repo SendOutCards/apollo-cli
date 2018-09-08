@@ -1,29 +1,18 @@
 import * as t from '@babel/types';
 import { stripIndent } from 'common-tags';
-import {
-  GraphQLEnumType,
-  GraphQLInputObjectType,
-} from 'graphql';
+import { GraphQLEnumType, GraphQLInputObjectType } from 'graphql';
 
-import {
-  CompilerContext,
-  Operation,
-  Fragment,
-  SelectionSet,
-  Field,
-} from 'apollo-codegen-core/lib/compiler';
+import { CompilerContext, Operation, Fragment, SelectionSet, Field } from 'apollo-codegen-core/lib/compiler';
 
 import {
   typeCaseForSelectionSet,
   Variant
-} from 'apollo-codegen-core/lib/compiler/visitors/typeCase';
+} from '@brad.hilton/apollo-codegen-core/lib/compiler/visitors/typeCase';
 
-import {
-  collectAndMergeFields
-} from 'apollo-codegen-core/lib/compiler/visitors/collectAndMergeFields';
+import { collectAndMergeFields } from 'apollo-codegen-core/lib/compiler/visitors/collectAndMergeFields';
 
 import { BasicGeneratedFile } from 'apollo-codegen-core/lib/utilities/CodeGenerator';
-import FlowGenerator, { ObjectProperty, FlowCompilerOptions, } from './language';
+import FlowGenerator, { ObjectProperty, FlowCompilerOptions } from './language';
 import Printer from './printer';
 
 class FlowGeneratedFile implements BasicGeneratedFile {
@@ -33,7 +22,7 @@ class FlowGeneratedFile implements BasicGeneratedFile {
     this.fileContents = fileContents;
   }
   get output() {
-    return this.fileContents
+    return this.fileContents;
   }
 }
 
@@ -44,58 +33,50 @@ function printEnumsAndInputObjects(generator: FlowAPIGenerator, context: Compile
     //==============================================================
   `);
 
-  context.typesUsed
-    .filter(type => (type instanceof GraphQLEnumType))
-    .forEach((enumType) => {
-      generator.typeAliasForEnumType(enumType as GraphQLEnumType);
-    });
+  context.typesUsed.filter(type => type instanceof GraphQLEnumType).forEach(enumType => {
+    generator.typeAliasForEnumType(enumType as GraphQLEnumType);
+  });
 
-  context.typesUsed
-    .filter(type => type instanceof GraphQLInputObjectType)
-    .forEach((inputObjectType) => {
-      generator.typeAliasForInputObjectType(inputObjectType as GraphQLInputObjectType);
-    });
+  context.typesUsed.filter(type => type instanceof GraphQLInputObjectType).forEach(inputObjectType => {
+    generator.typeAliasForInputObjectType(inputObjectType as GraphQLInputObjectType);
+  });
 
   generator.printer.enqueue(stripIndent`
     //==============================================================
     // END Enums and Input Objects
     //==============================================================
-  `)
+  `);
 }
 
-export function generateSource(
-  context: CompilerContext,
-) {
+export function generateSource(context: CompilerContext) {
   const generator = new FlowAPIGenerator(context);
-  const generatedFiles: { sourcePath: string, fileName: string, content: FlowGeneratedFile }[] = [];
+  const generatedFiles: { sourcePath: string; fileName: string; content: FlowGeneratedFile }[] = [];
 
-  Object.values(context.operations)
-    .forEach((operation) => {
-      generator.fileHeader();
-      generator.typeAliasesForOperation(operation);
+  Object.values(context.operations).forEach(operation => {
+    generator.fileHeader();
+    generator.typeAliasesForOperation(operation);
 
-      const output = generator.printer.printAndClear();
+    const output = generator.printer.printAndClear();
 
-      generatedFiles.push({
-        sourcePath: operation.filePath,
-        fileName: `${operation.operationName}.js`,
-        content: new FlowGeneratedFile(output)
-      });
+    generatedFiles.push({
+      sourcePath: operation.filePath,
+      fileName: `${operation.operationName}.js`,
+      content: new FlowGeneratedFile(output)
     });
+  });
 
-  Object.values(context.fragments)
-    .forEach((fragment) => {
-      generator.fileHeader();
-      generator.typeAliasesForFragment(fragment);
+  Object.values(context.fragments).forEach(fragment => {
+    generator.fileHeader();
+    generator.typeAliasesForFragment(fragment);
 
-      const output = generator.printer.printAndClear();
+    const output = generator.printer.printAndClear();
 
-      generatedFiles.push({
-        sourcePath: fragment.filePath,
-        fileName: `${fragment.fragmentName}.js`,
-        content: new FlowGeneratedFile(output)
-      });
+    generatedFiles.push({
+      sourcePath: fragment.filePath,
+      fileName: `${fragment.fragmentName}.js`,
+      content: new FlowGeneratedFile(output)
     });
+  });
 
   generator.fileHeader();
   printEnumsAndInputObjects(generator, context);
@@ -108,9 +89,9 @@ export function generateSource(
 }
 
 export class FlowAPIGenerator extends FlowGenerator {
-  context: CompilerContext
-  printer: Printer
-  scopeStack: string[]
+  context: CompilerContext;
+  printer: Printer;
+  scopeStack: string[];
 
   constructor(context: CompilerContext) {
     super(context.options as FlowCompilerOptions);
@@ -138,22 +119,14 @@ export class FlowAPIGenerator extends FlowGenerator {
     const typeAlias = this.inputObjectDeclaration(inputObjectType);
 
     const { description } = inputObjectType;
-    const exportDeclarationOptions = description
-      ? { comments: ` ${description.replace('\n', ' ')}` }
-      : {};
+    const exportDeclarationOptions = description ? { comments: ` ${description.replace('\n', ' ')}` } : {};
 
     const exportedTypeAlias = this.exportDeclaration(typeAlias, exportDeclarationOptions);
     this.printer.enqueue(exportedTypeAlias);
-
   }
 
   public typeAliasesForOperation(operation: Operation) {
-    const {
-      operationType,
-      operationName,
-      variables,
-      selectionSet
-    } = operation;
+    const { operationType, operationName, variables, selectionSet } = operation;
 
     this.scopeStackPush(operationName);
 
@@ -161,7 +134,7 @@ export class FlowAPIGenerator extends FlowGenerator {
       // ====================================================
       // GraphQL ${operationType} operation: ${operationName}
       // ====================================================
-    `)
+    `);
 
     // The root operation only has one variant
     // Do we need to get exhaustive variants anyway?
@@ -170,9 +143,7 @@ export class FlowAPIGenerator extends FlowGenerator {
     const variant = variants[0];
     const properties = this.getPropertiesForVariant(variant);
 
-    const exportedTypeAlias = this.exportDeclaration(
-      this.typeAliasObject(operationName, properties)
-    );
+    const exportedTypeAlias = this.exportDeclaration(this.typeAliasObject(operationName, properties));
 
     this.printer.enqueue(exportedTypeAlias);
     this.scopeStackPop();
@@ -181,21 +152,24 @@ export class FlowAPIGenerator extends FlowGenerator {
     if (variables.length > 0) {
       const interfaceName = operationName + 'Variables';
       this.scopeStackPush(interfaceName);
-      this.printer.enqueue(this.exportDeclaration(
-        this.typeAliasObject(interfaceName, variables.map((variable) => ({
-          name: variable.name,
-          annotation: this.typeAnnotationFromGraphQLType(variable.type)
-        })), { keyInheritsNullability: true })
-      ));
+      this.printer.enqueue(
+        this.exportDeclaration(
+          this.typeAliasObject(
+            interfaceName,
+            variables.map(variable => ({
+              name: variable.name,
+              annotation: this.typeAnnotationFromGraphQLType(variable.type)
+            })),
+            { keyInheritsNullability: true }
+          )
+        )
+      );
       this.scopeStackPop();
     }
   }
 
   public typeAliasesForFragment(fragment: Fragment) {
-    const {
-      fragmentName,
-      selectionSet
-    } = fragment;
+    const { fragmentName, selectionSet } = fragment;
 
     this.scopeStackPush(fragmentName);
 
@@ -211,12 +185,7 @@ export class FlowAPIGenerator extends FlowGenerator {
       const properties = this.getPropertiesForVariant(variants[0]);
 
       const name = this.annotationFromScopeStack(this.scopeStack).id.name;
-      const exportedTypeAlias = this.exportDeclaration(
-        this.typeAliasObject(
-          name,
-          properties
-        )
-      );
+      const exportedTypeAlias = this.exportDeclaration(this.typeAliasObject(name, properties));
 
       this.printer.enqueue(exportedTypeAlias);
     } else {
@@ -226,12 +195,7 @@ export class FlowAPIGenerator extends FlowGenerator {
         const properties = this.getPropertiesForVariant(variant);
 
         const name = this.annotationFromScopeStack(this.scopeStack).id.name;
-        const exportedTypeAlias = this.exportDeclaration(
-          this.typeAliasObject(
-            name,
-            properties
-          )
-        );
+        const exportedTypeAlias = this.exportDeclaration(this.typeAliasObject(name, properties));
 
         this.printer.enqueue(exportedTypeAlias);
 
@@ -242,10 +206,7 @@ export class FlowAPIGenerator extends FlowGenerator {
 
       this.printer.enqueue(
         this.exportDeclaration(
-          this.typeAliasGenericUnion(
-            this.annotationFromScopeStack(this.scopeStack).id.name,
-            unionMembers
-          )
+          this.typeAliasGenericUnion(this.annotationFromScopeStack(this.scopeStack).id.name, unionMembers)
         )
       );
     }
@@ -258,17 +219,11 @@ export class FlowAPIGenerator extends FlowGenerator {
   }
 
   private getTypeCasesForSelectionSet(selectionSet: SelectionSet) {
-    return typeCaseForSelectionSet(
-      selectionSet,
-      this.context.options.mergeInFieldsFromFragmentSpreads
-    );
+    return typeCaseForSelectionSet(selectionSet, this.context.options.mergeInFieldsFromFragmentSpreads);
   }
 
   private getPropertiesForVariant(variant: Variant): ObjectProperty[] {
-    const fields = collectAndMergeFields(
-      variant,
-      this.context.options.mergeInFieldsFromFragmentSpreads
-    );
+    const fields = collectAndMergeFields(variant, this.context.options.mergeInFieldsFromFragmentSpreads);
 
     return fields.map(field => {
       const fieldName = field.alias !== undefined ? field.alias : field.name;
@@ -277,15 +232,9 @@ export class FlowAPIGenerator extends FlowGenerator {
       let res;
       if (field.selectionSet) {
         const generatedTypeName = this.annotationFromScopeStack(this.scopeStack);
-        res = this.handleFieldSelectionSetValue(
-          generatedTypeName,
-          field
-        );
+        res = this.handleFieldSelectionSetValue(generatedTypeName, field);
       } else {
-        res = this.handleFieldValue(
-          field,
-          variant
-        );
+        res = this.handleFieldValue(field, variant);
       }
 
       this.scopeStackPop();
@@ -293,10 +242,7 @@ export class FlowAPIGenerator extends FlowGenerator {
     });
   }
 
-  private handleFieldSelectionSetValue(
-    generatedTypeName: t.GenericTypeAnnotation,
-    field: Field,
-  ) {
+  private handleFieldSelectionSetValue(generatedTypeName: t.GenericTypeAnnotation, field: Field) {
     const { selectionSet } = field;
 
     const annotation = this.typeAnnotationFromGraphQLType(field.type, generatedTypeName.id.name);
@@ -309,24 +255,18 @@ export class FlowAPIGenerator extends FlowGenerator {
       const variant = variants[0];
       const properties = this.getPropertiesForVariant(variant);
       exportedTypeAlias = this.exportDeclaration(
-        this.typeAliasObject(
-          this.annotationFromScopeStack(this.scopeStack).id.name,
-          properties
-        )
+        this.typeAliasObject(this.annotationFromScopeStack(this.scopeStack).id.name, properties)
       );
     } else {
       const propertySets = variants.map(variant => {
-        this.scopeStackPush(variant.possibleTypes[0].toString())
+        this.scopeStackPush(variant.possibleTypes[0].toString());
         const properties = this.getPropertiesForVariant(variant);
         this.scopeStackPop();
         return properties;
-      })
+      });
 
       exportedTypeAlias = this.exportDeclaration(
-        this.typeAliasObjectUnion(
-          generatedTypeName.id.name,
-          propertySets
-        )
+        this.typeAliasObjectUnion(generatedTypeName.id.name, propertySets)
       );
     }
 
@@ -335,19 +275,18 @@ export class FlowAPIGenerator extends FlowGenerator {
     return {
       name: field.alias ? field.alias : field.name,
       description: field.description,
-      annotation: annotation,
+      annotation: annotation
     };
   }
 
   private handleFieldValue(field: Field, variant: Variant) {
     let res;
     if (field.name === '__typename') {
-      const annotations = variant.possibleTypes
-        .map(type => {
-          const annotation = t.stringLiteralTypeAnnotation();
-          annotation.value = type.toString();
-          return annotation;
-        });
+      const annotations = variant.possibleTypes.map(type => {
+        const annotation = t.stringLiteralTypeAnnotation();
+        annotation.value = type.toString();
+        return annotation;
+      });
 
       res = {
         name: field.alias ? field.alias : field.name,
@@ -375,8 +314,7 @@ export class FlowAPIGenerator extends FlowGenerator {
   }
 
   scopeStackPop() {
-    const popped = this.scopeStack.pop()
+    const popped = this.scopeStack.pop();
     return popped;
   }
-
 }
