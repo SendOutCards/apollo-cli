@@ -1,8 +1,12 @@
-import { SelectionSet, Fragment, Operation } from 'apollo-codegen-core/lib/compiler';
+import {
+  SelectionSet,
+  Fragment,
+  Operation
+} from "apollo-codegen-core/lib/compiler";
 
-import { Set } from 'immutable';
+import { Set } from "immutable";
 
-import { camelCase } from 'lodash';
+import { camelCase } from "lodash";
 
 import {
   GraphQLEnumType,
@@ -10,7 +14,7 @@ import {
   GraphQLEnumValue,
   GraphQLInputFieldMap,
   GraphQLInputField
-} from 'graphql';
+} from "graphql";
 
 import {
   identifier,
@@ -33,7 +37,7 @@ import {
   Declaration,
   exportNamedDeclaration,
   Identifier
-} from '@babel/types';
+} from "@babel/types";
 
 import {
   AnyObject,
@@ -43,17 +47,18 @@ import {
   OutputType,
   InputType,
   Scalar
-} from './intermediates';
-import { OptionalType, MaybeType, IfType, PartialType } from './genericTypes';
+} from "./intermediates";
+import { OptionalType, MaybeType, IfType, PartialType } from "./genericTypes";
 
-export const typeReference = (name: string): TSTypeReference => TSTypeReference(identifier(name));
+export const typeReference = (name: string): TSTypeReference =>
+  TSTypeReference(identifier(name));
 
 const typeForScalar = (scalar: Scalar): TSType => {
   switch (scalar.name) {
-    case 'Int':
-    case 'Float':
+    case "Int":
+    case "Float":
       return TSNumberKeyword();
-    case 'Boolean':
+    case "Boolean":
       return TSBooleanKeyword();
     default:
       return TSStringKeyword();
@@ -62,54 +67,70 @@ const typeForScalar = (scalar: Scalar): TSType => {
 
 export const typeForInputType = (type: InputType): TSType => {
   switch (type.kind) {
-    case 'Maybe':
+    case "Maybe":
       return OptionalType(typeForInputType(type.ofType));
-    case 'List':
+    case "List":
       return TSArrayType(typeForInputType(type.ofType));
-    case 'InputObject':
+    case "InputObject":
       return typeReference(type.name);
-    case 'Enum':
+    case "Enum":
       return typeReference(type.name);
-    case 'Scalar':
+    case "Scalar":
       return typeForScalar(type);
   }
 };
 
 const typeForOutputType = (type: OutputType): TSType => {
   switch (type.kind) {
-    case 'Maybe':
+    case "Maybe":
       return MaybeType(typeForOutputType(type.ofType));
-    case 'List':
+    case "List":
       return TSArrayType(typeForOutputType(type.ofType));
-    case 'FragmentReference':
+    case "FragmentReference":
       return typeReference(type.name);
-    case 'InlineSelection':
+    case "InlineSelection":
       return typeForInlineSelection(type);
-    case 'Enum':
+    case "Enum":
       return typeReference(type.name);
-    case 'Scalar':
+    case "Scalar":
       return typeForScalar(type);
   }
 };
 
 const propertySignatureForField = (field: Field): TSPropertySignature =>
-  TSPropertySignature(identifier(field.name), TSTypeAnnotation(typeForOutputType(field.type)));
+  TSPropertySignature(
+    identifier(field.name),
+    TSTypeAnnotation(typeForOutputType(field.type))
+  );
 
-const typeForFragmentReference = (type: FragmentReference): TSType => typeReference(type.name);
+const typeForFragmentReference = (type: FragmentReference): TSType =>
+  typeReference(type.name);
 
 const typeForAnyObject = (object: AnyObject): TSType =>
-  object.kind == 'FragmentReference' ? typeForFragmentReference(object) : typeForInlineSelection(object);
+  object.kind == "FragmentReference"
+    ? typeForFragmentReference(object)
+    : typeForInlineSelection(object);
 
 const emptyType = TSTypeLiteral([]);
 
-const unionTypeForTypeConditions = (typeConditions: AnyObject[], possibleTypes: Set<string>): TSUnionType => {
+const unionTypeForTypeConditions = (
+  typeConditions: AnyObject[],
+  possibleTypes: Set<string>
+): TSUnionType => {
   const remainingPossibleTypes = possibleTypes.subtract(
-    typeConditions.reduce((possibleTypes, type) => possibleTypes.union(type.possibleTypes), Set<string>())
+    typeConditions.reduce(
+      (possibleTypes, type) => possibleTypes.union(type.possibleTypes),
+      Set<string>()
+    )
   );
   return TSUnionType(
     typeConditions
       .map(type => IfType(type.possibleTypes, typeForAnyObject(type)))
-      .concat(remainingPossibleTypes.size > 0 ? [IfType(remainingPossibleTypes, emptyType)] : [])
+      .concat(
+        remainingPossibleTypes.size > 0
+          ? [IfType(remainingPossibleTypes, emptyType)]
+          : []
+      )
   );
 };
 
@@ -117,12 +138,18 @@ const typeForInlineSelection = (type: InlineSelection): TSType =>
   TSIntersectionType(
     [
       ...type.intersections.map(typeForFragmentReference),
-      type.fields.length > 0 ? TSTypeLiteral(type.fields.map(propertySignatureForField)) : undefined,
+      type.fields.length > 0
+        ? TSTypeLiteral(type.fields.map(propertySignatureForField))
+        : undefined,
       type.booleanConditions.length > 0
-        ? PartialType(TSIntersectionType(type.booleanConditions.map(typeForAnyObject)))
+        ? PartialType(
+            TSIntersectionType(type.booleanConditions.map(typeForAnyObject))
+          )
         : undefined,
       type.typeConditions.length > 0
-        ? TSParenthesizedType(unionTypeForTypeConditions(type.typeConditions, type.possibleTypes))
+        ? TSParenthesizedType(
+            unionTypeForTypeConditions(type.typeConditions, type.possibleTypes)
+          )
         : undefined
     ]
       .filter(x => x)
@@ -136,16 +163,28 @@ const enumMemberForGraphQLEnumValue = (value: GraphQLEnumValue) =>
   TSEnumMember(identifier(value.name), stringLiteral(value.name));
 
 export const enumDeclarationForGraphQLEnumType = (type: GraphQLEnumType) =>
-  TSEnumDeclaration(identifier(type.name), type.getValues().map(enumMemberForGraphQLEnumValue));
+  TSEnumDeclaration(
+    identifier(type.name),
+    type.getValues().map(enumMemberForGraphQLEnumValue)
+  );
 
 const propertySignatureForGraphQLInputField = (field: GraphQLInputField) =>
-  TSPropertySignature(identifier(field.name), TSTypeAnnotation(typeForInputType(InputType(field.type))));
+  TSPropertySignature(
+    identifier(field.name),
+    TSTypeAnnotation(typeForInputType(InputType(field.type)))
+  );
 
 const typeForGraphQLInputFieldMap = (map: GraphQLInputFieldMap) =>
   TSTypeLiteral(Object.values(map).map(propertySignatureForGraphQLInputField));
 
-export const typeAliasDeclarationForGraphQLInputObjectType = (type: GraphQLInputObjectType) =>
-  TSTypeAliasDeclaration(identifier(type.name), undefined, typeForGraphQLInputFieldMap(type.getFields()));
+export const typeAliasDeclarationForGraphQLInputObjectType = (
+  type: GraphQLInputObjectType
+) =>
+  TSTypeAliasDeclaration(
+    identifier(type.name),
+    undefined,
+    typeForGraphQLInputFieldMap(type.getFields())
+  );
 
 export const typeAliasDeclarationForFragment = (fragment: Fragment) =>
   TSTypeAliasDeclaration(
@@ -161,7 +200,8 @@ export const typeAliasDeclarationForOperation = (operation: Operation) =>
     typeForSelectionSet(operation.selectionSet)
   );
 
-export const exportDeclaration = (expression: Declaration) => exportNamedDeclaration(expression, []);
+export const exportDeclaration = (expression: Declaration) =>
+  exportNamedDeclaration(expression, []);
 
 export const stringIdentifier = (fragmentOrOperationName: string): Identifier =>
-  identifier(camelCase(fragmentOrOperationName + 'String'));
+  identifier(camelCase(fragmentOrOperationName + "String"));
