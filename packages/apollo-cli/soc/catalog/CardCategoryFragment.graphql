@@ -1,0 +1,8 @@
+fragment CardCategoryFragment on CardCategory {
+  __typename
+  id
+  description
+  cards(limit: 10) {
+    ...MinimalSendableCardFragment
+  }
+}

@@ -1,10 +1,10 @@
 import { Maybe } from "../../../__generated__/globalTypes";
 
-import { AddressFragment, addressFragmentString } from "./AddressFragment";
+import { AddressFragment } from "./AddressFragment";
 
 import accountFragmentRawString from "../AccountFragment.graphql";
 
-export const accountFragmentString = [accountFragmentRawString, addressFragmentString].join("\n\n");
+export const accountFragmentString = accountFragmentRawString;
 
 export type AccountFragment = {
   id: string;

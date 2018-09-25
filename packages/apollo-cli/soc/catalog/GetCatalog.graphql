@@ -1,0 +1,26 @@
+query GetCatalog {
+  firstReasonToSend: collections(reasonToSend: true, limit: 1) {
+    ...ReasonToSendFragment
+  }
+  reasonsToSend: collections(reasonToSend: true, limit: 10) {
+    ...ReasonToSendFragment
+  }
+  # favoritedCards: sendableCards(favorite: true, limit: 20) {
+  #   ...MinimalSendableCardFragment
+  # }
+  # featuredCards: sendableCards(featured: true, limit: 10) {
+  #   ...MinimalSendableCardFragment
+  # }
+  collections: collections(reasonToSend: false, limit: 10) {
+    ...CollectionFragment
+  }
+  myCards: cards(limit: 20) {
+    ...MyCardFragment
+  }
+  # legacyPicturePlusCards: legacyPicturePlusCards(limit: 20) {
+  #   ...MinimalSendableCardFragment
+  # }
+  cardCategories {
+    ...CardCategoryFragment
+  }
+}

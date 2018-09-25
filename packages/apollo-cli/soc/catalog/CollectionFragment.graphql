@@ -1,0 +1,9 @@
+fragment CollectionFragment on Collection {
+  __typename
+  id
+  title
+  backgroundStartColor
+  backgroundEndColor
+  backgroundImageUrl
+  textColor
+}

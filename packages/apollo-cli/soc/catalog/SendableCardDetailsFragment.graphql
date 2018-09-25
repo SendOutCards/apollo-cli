@@ -1,0 +1,28 @@
+fragment SendableCardDetailsFragment on SendableCard {
+  description
+  insideRightImage {
+    url
+    smallThumb: url(width: 700, fitIn: true)
+  }
+  variationColor
+  variations {
+    id
+    frontImage {
+      id
+      url
+      smallThumb: url(width: 700, fitIn: true)
+    }
+    insideRightImage {
+      id
+      url
+      smallThumb: url(width: 700, fitIn: true)
+    }
+    variationColor
+  }
+  cost {
+    total {
+      asString
+      amount
+    }
+  }
+}

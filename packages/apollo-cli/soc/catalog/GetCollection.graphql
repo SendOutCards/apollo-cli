@@ -1,0 +1,10 @@
+query GetCollection($id: ID!) {
+  collection(id: $id) {
+    ...CollectionFragment
+    description
+    reasonToSend
+    cards(limit: 10) {
+      ...MinimalSendableCardFragment
+    }
+  }
+}

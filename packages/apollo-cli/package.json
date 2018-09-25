@@ -1,7 +1,7 @@
 {
   "name": "@sendoutcards/apollo",
   "description": "CLI for apollographql",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "author": "opensource@apollographql.com",
   "bin": {
     "apollo": "./bin/run"
@@ -23,7 +23,7 @@
     "apollo-codegen-flow-legacy": "^0.27.0",
     "apollo-codegen-scala": "^0.27.0",
     "apollo-codegen-swift": "^0.27.0",
-    "@sendoutcards/apollo-codegen-typescript": "^0.27.2",
+    "@sendoutcards/apollo-codegen-typescript": "^0.27.4",
     "apollo-codegen-typescript-legacy": "^0.27.0",
     "apollo-link": "^1.2.2",
     "apollo-link-http": "^1.5.4",

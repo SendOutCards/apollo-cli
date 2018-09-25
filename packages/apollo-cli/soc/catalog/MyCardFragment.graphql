@@ -1,0 +1,5 @@
+fragment MyCardFragment on Card {
+  id
+  frontPreviewUrl(width: 320, fitIn: true)
+  isHorizontal
+}

@@ -1,4 +1,4 @@
-import { SelectionSet } from "apollo-codegen-core/lib/compiler";
+import { SelectionSet, Selection } from "apollo-codegen-core/lib/compiler";
 
 import {
   InlineSelection,
@@ -14,13 +14,19 @@ import { Set } from "immutable";
 import compact from "./compact";
 
 type Dependency = {
-  type: "fragment" | "global";
+  type: "fragment-type" | "fragment-string" | "global";
   name: string;
+};
+
+export type FragmentDependency = {
+  name: string;
+  importType: boolean;
+  importString: boolean;
 };
 
 type Dependencies = {
   global: string[];
-  fragments: string[];
+  fragments: FragmentDependency[];
 };
 
 const globalDependency = (name: string): Dependency => ({
@@ -69,8 +75,13 @@ const inputTypeDependencies = (type: InputType): Dependency[] => {
 const fragmentReferenceDependency = (
   reference: FragmentReference
 ): Dependency => ({
-  type: "fragment",
+  type: "fragment-type",
   name: reference.name
+});
+
+const fragmentStringDependency = (name: string): Dependency => ({
+  type: "fragment-string",
+  name
 });
 
 const inlineSelectionDependencies = (
@@ -84,6 +95,19 @@ const inlineSelectionDependencies = (
     selection.typeConditions.length > 0 && globalDependency("If")
   );
 
+const selectionFragmentStringDependencies = (
+  selection: Selection
+): Dependency[] =>
+  compact(
+    selection.kind == "FragmentSpread" &&
+      fragmentStringDependency(selection.fragmentName),
+    ...(selection.selectionSet
+      ? selection.selectionSet.selections.flatMap(
+          selectionFragmentStringDependencies
+        )
+      : [])
+  );
+
 const anyObjectDependencies = (object: AnyObject): Dependency[] =>
   object.kind == "InlineSelection"
     ? inlineSelectionDependencies(object)
@@ -91,7 +115,7 @@ const anyObjectDependencies = (object: AnyObject): Dependency[] =>
 
 const dedupedDependenciesOfType = (
   dependencies: Dependency[],
-  type: "fragment" | "global"
+  type: "fragment-type" | "fragment-string" | "global"
 ): string[] =>
   Set(
     dependencies
@@ -108,18 +132,51 @@ const variableDependencies = (variable: {
 const allDependencies = (
   selectionSet: SelectionSet,
   variables?: { name: string; type: GraphQLType }[]
-): Dependency[] =>
-  inlineSelectionDependencies(InlineSelection(selectionSet)).concat(
-    variables
-      ? variables
-          .flatMap(variableDependencies)
-          .concat(globalDependency("Operation"))
-      : []
+): Dependency[] => [
+  ...inlineSelectionDependencies(InlineSelection(selectionSet)),
+  ...(variables
+    ? [
+        ...variables.flatMap(variableDependencies),
+        ...selectionSet.selections.flatMap(selectionFragmentStringDependencies),
+        globalDependency("Operation")
+      ]
+    : [])
+];
+
+const fragmentDependencies = (
+  dependencies: Dependency[]
+): FragmentDependency[] => {
+  const fragmentTypes = Set(
+    dependencies
+      .filter(dependency => dependency.type == "fragment-type")
+      .map(dependency => dependency.name)
   );
+  let fragmentStrings = Set(
+    dependencies
+      .filter(dependency => dependency.type == "fragment-string")
+      .map(dependency => dependency.name)
+  );
+  return fragmentTypes
+    .map(fragmentType => {
+      const importString = fragmentStrings.contains(fragmentType!);
+      fragmentStrings = fragmentStrings.remove(fragmentType!);
+      return { name: fragmentType!, importType: true, importString };
+    })
+    .toArray()
+    .concat(
+      fragmentStrings
+        .map(fragmentString => ({
+          name: fragmentString!,
+          importType: false,
+          importString: true
+        }))
+        .toArray()
+    );
+};
 
 const mapDependencies = (dependencies: Dependency[]): Dependencies => ({
   global: dedupedDependenciesOfType(dependencies, "global"),
-  fragments: dedupedDependenciesOfType(dependencies, "fragment")
+  fragments: fragmentDependencies(dependencies)
 });
 
 const Dependencies = (

@@ -1,0 +1,12 @@
+fragment MinimalSendableCardFragment on SendableCard {
+  id
+  title
+  variationColor
+  isFavorite
+  isHorizontal
+  isPremium
+  frontImage {
+    url
+    smallThumb: url(width: 320, fitIn: true)
+  }
+}
