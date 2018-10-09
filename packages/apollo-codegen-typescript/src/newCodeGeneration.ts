@@ -1,18 +1,18 @@
-import { BasicGeneratedFile } from 'apollo-codegen-core/lib/utilities/CodeGenerator';
+import { BasicGeneratedFile } from "apollo-codegen-core/lib/utilities/CodeGenerator";
 
-import { CompilerContext } from 'apollo-codegen-core/lib/compiler';
+import { CompilerContext } from "apollo-codegen-core/lib/compiler";
 
-import Printer from './printer';
+import Printer from "./printer";
 
 import {
   typeAliasDeclarationForGraphQLInputObjectType,
   enumDeclarationForGraphQLEnumType,
   exportDeclaration
-} from './types';
-import { constructorDeclarationForGraphQLInputObjectType } from './constructors';
-import { isEnumType, isInputObjectType } from 'graphql';
-import { operationFile } from './operationFile';
-import { fragmentFile } from './fragmentFile';
+} from "./types";
+import { constructorDeclarationForGraphQLInputObjectType } from "./constructors";
+import { isEnumType, isInputObjectType } from "graphql";
+import { operationFile } from "./operationFile";
+import { fragmentFile } from "./fragmentFile";
 
 class TypescriptGeneratedFile implements BasicGeneratedFile {
   fileContents: string;
@@ -36,7 +36,9 @@ interface IGeneratedFile {
   content: (options?: IGeneratedFileOptions) => TypescriptGeneratedFile;
 }
 
-export function generateLocalSource(context: CompilerContext): IGeneratedFile[] {
+export function generateLocalSource(
+  context: CompilerContext
+): IGeneratedFile[] {
   return Object.values(context.fragments)
     .map(fragment => ({
       sourcePath: fragment.filePath,
@@ -44,9 +46,12 @@ export function generateLocalSource(context: CompilerContext): IGeneratedFile[] 
       content: (options?: IGeneratedFileOptions) => {
         const printer = new Printer();
         if (options && options.outputPath && options.globalSourcePath) {
-          fragmentFile(fragment, options.outputPath, options.globalSourcePath, context).forEach(printable =>
-            printer.enqueue(printable)
-          );
+          fragmentFile(
+            fragment,
+            options.outputPath,
+            options.globalSourcePath,
+            context
+          ).forEach(printable => printer.enqueue(printable));
         }
         const result = printer.print();
         return new TypescriptGeneratedFile(result);
@@ -59,9 +64,12 @@ export function generateLocalSource(context: CompilerContext): IGeneratedFile[] 
         content: (options?: IGeneratedFileOptions) => {
           const printer = new Printer();
           if (options && options.outputPath && options.globalSourcePath) {
-            operationFile(operation, options.outputPath, options.globalSourcePath, context).forEach(
-              printable => printer.enqueue(printable)
-            );
+            operationFile(
+              operation,
+              options.outputPath,
+              options.globalSourcePath,
+              context
+            ).forEach(printable => printer.enqueue(printable));
           }
           const result = printer.print();
           return new TypescriptGeneratedFile(result);
@@ -75,15 +83,29 @@ export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };`;
 
-export function generateGlobalSource(context: CompilerContext): TypescriptGeneratedFile {
+export function generateGlobalSource(
+  context: CompilerContext
+): TypescriptGeneratedFile {
+  // Object.values(context.schema.getTypeMap())
+  //   .filter(type => isCompositeType(type))
+  //   .map(type => type as GraphQLCompositeType)
+  //   .forEach(type => {
+  //     console.log(type);
+  //   });
   const printer = new Printer();
   printer.enqueue(globalTypes);
   context.typesUsed.forEach(type => {
     if (isEnumType(type)) {
-      printer.enqueue(exportDeclaration(enumDeclarationForGraphQLEnumType(type)));
+      printer.enqueue(
+        exportDeclaration(enumDeclarationForGraphQLEnumType(type))
+      );
     } else if (isInputObjectType(type)) {
-      printer.enqueue(exportDeclaration(typeAliasDeclarationForGraphQLInputObjectType(type)));
-      printer.enqueue(exportDeclaration(constructorDeclarationForGraphQLInputObjectType(type)));
+      printer.enqueue(
+        exportDeclaration(typeAliasDeclarationForGraphQLInputObjectType(type))
+      );
+      printer.enqueue(
+        exportDeclaration(constructorDeclarationForGraphQLInputObjectType(type))
+      );
     }
   });
   const result = printer.print();

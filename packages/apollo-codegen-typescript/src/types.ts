@@ -36,7 +36,8 @@ import {
   TSEnumMember,
   Declaration,
   exportNamedDeclaration,
-  Identifier
+  Identifier,
+  TSLiteralType
 } from "@babel/types";
 
 import {
@@ -46,7 +47,8 @@ import {
   Field,
   OutputType,
   InputType,
-  Scalar
+  Scalar,
+  Typename
 } from "./intermediates";
 import { OptionalType, MaybeType, IfType, PartialType } from "./genericTypes";
 
@@ -80,7 +82,14 @@ export const typeForInputType = (type: InputType): TSType => {
   }
 };
 
-const typeForOutputType = (type: OutputType): TSType => {
+const typeForTypename = (typename: Typename): TSType =>
+  TSUnionType(
+    typename.possibleTypes
+      .toArray()
+      .map(type => TSLiteralType(stringLiteral(type)))
+  );
+
+const typeForOutputType = (type: OutputType | Typename): TSType => {
   switch (type.kind) {
     case "Maybe":
       return MaybeType(typeForOutputType(type.ofType));
@@ -94,6 +103,8 @@ const typeForOutputType = (type: OutputType): TSType => {
       return typeReference(type.name);
     case "Scalar":
       return typeForScalar(type);
+    case "Typename":
+      return typeForTypename(type);
   }
 };
 

@@ -5,7 +5,8 @@ import {
   FragmentReference,
   OutputType,
   AnyObject,
-  InputType
+  InputType,
+  Typename
 } from "./intermediates";
 
 import { GraphQLType, GraphQLInputType } from "graphql";
@@ -34,7 +35,7 @@ const globalDependency = (name: string): Dependency => ({
   name
 });
 
-const outputTypeDependencies = (type: OutputType): Dependency[] => {
+const outputTypeDependencies = (type: OutputType | Typename): Dependency[] => {
   switch (type.kind) {
     case "Maybe":
       return [
@@ -50,6 +51,8 @@ const outputTypeDependencies = (type: OutputType): Dependency[] => {
     case "Enum":
       return [globalDependency(type.name)];
     case "Scalar":
+      return [];
+    case "Typename":
       return [];
   }
 };

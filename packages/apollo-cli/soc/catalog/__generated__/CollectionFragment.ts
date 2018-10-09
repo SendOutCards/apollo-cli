@@ -5,7 +5,7 @@ import collectionFragmentRawString from "../CollectionFragment.graphql";
 export const collectionFragmentString = collectionFragmentRawString;
 
 export type CollectionFragment = {
-  __typename: string;
+  __typename: "Collection";
   id: string;
   title: string;
   backgroundStartColor: string;

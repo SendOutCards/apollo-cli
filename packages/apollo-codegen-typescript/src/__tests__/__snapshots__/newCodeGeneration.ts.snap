@@ -162,11 +162,11 @@ export type SimpleFragment = {
   },
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import { SimpleFragment, simpleFragmentString } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/SimpleFragment\\";
+      "fileContents": "import { SimpleFragment } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/SimpleFragment\\";
 
 import anotherFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
-export const anotherFragmentString = [anotherFragmentRawString, simpleFragmentString].join(\\"\\\\n\\\\n\\");
+export const anotherFragmentString = anotherFragmentRawString;
 
 export type AnotherFragment = SimpleFragment & {
   id: string;
@@ -209,11 +209,11 @@ export type SimpleFragment = {
     "content": TypescriptGeneratedFile {
       "fileContents": "import { Maybe, Episode, If } from \\"../../__generated__/globalTypes\\";
 
-import { SimpleFragment, simpleFragmentString } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/SimpleFragment\\";
+import { SimpleFragment } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/SimpleFragment\\";
 
 import anotherFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
-export const anotherFragmentString = [anotherFragmentRawString, simpleFragmentString].join(\\"\\\\n\\\\n\\");
+export const anotherFragmentString = anotherFragmentRawString;
 
 export type AnotherFragment = SimpleFragment & {
   id: string;
@@ -612,6 +612,7 @@ import heroNameString from \\"../../Users/Brad/Developer/Node/SendOutCards/apoll
 
 export type HeroName = {
   hero: Maybe<{
+    __typename: \\"Human\\" | \\"Droid\\";
     name: string;
     id: string;
   }>;

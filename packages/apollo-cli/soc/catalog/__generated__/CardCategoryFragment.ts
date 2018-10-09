@@ -5,7 +5,7 @@ import cardCategoryFragmentRawString from "../CardCategoryFragment.graphql";
 export const cardCategoryFragmentString = cardCategoryFragmentRawString;
 
 export type CardCategoryFragment = {
-  __typename: string;
+  __typename: "CardCategory";
   id: string;
   description: string;
   cards: MinimalSendableCardFragment[];
