@@ -6,6 +6,7 @@ import dependencyImports from "./dependencyImports";
 
 import { Fragment, CompilerContext } from "apollo-codegen-core/lib/compiler";
 import stringDeclarations from "./stringDeclarations";
+import { isFragmentDeclaration } from "./typePredicates";
 
 export const fragmentFile = (
   fragment: Fragment,
@@ -22,5 +23,6 @@ export const fragmentFile = (
       [],
       true
     ),
-    exportDeclaration(typeAliasDeclarationForFragment(fragment))
+    exportDeclaration(typeAliasDeclarationForFragment(fragment)),
+    exportDeclaration(isFragmentDeclaration(fragment))
   ])(Dependencies(fragment.selectionSet));

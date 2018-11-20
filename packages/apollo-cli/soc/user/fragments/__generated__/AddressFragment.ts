@@ -15,3 +15,15 @@ export type AddressFragment = {
   state: Maybe<string>;
   country: string;
 };
+
+export const isAddressFragment = (fragment: any): fragment is AddressFragment =>
+  fragment &&
+  typeof fragment.firstName == "string" &&
+  typeof fragment.lastName == "string" &&
+  typeof fragment.company == "string" &&
+  typeof fragment.address1 == "string" &&
+  typeof fragment.address2 == "string" &&
+  typeof fragment.city == "string" &&
+  typeof fragment.postalCode == "string" &&
+  (fragment.state == null || typeof fragment.state == "string") &&
+  typeof fragment.country == "string";

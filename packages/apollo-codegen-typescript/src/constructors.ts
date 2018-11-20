@@ -1,5 +1,10 @@
-import { Operation } from 'apollo-codegen-core/lib/compiler';
-import { GraphQLType, GraphQLInputType, GraphQLInputObjectType, GraphQLInputField } from 'graphql';
+import { Operation } from "apollo-codegen-core/lib/compiler";
+import {
+  GraphQLType,
+  GraphQLInputType,
+  GraphQLInputObjectType,
+  GraphQLInputField
+} from "graphql";
 
 import {
   identifier,
@@ -15,12 +20,12 @@ import {
   objectProperty,
   ArrowFunctionExpression,
   ObjectProperty
-} from '@babel/types';
+} from "@babel/types";
 
-import { typeForInputType, typeReference, stringIdentifier } from './types';
-import { InputType } from './intermediates';
-import { OperationType } from './genericTypes';
-import compact from './compact';
+import { typeForInputType, typeReference, stringIdentifier } from "./types";
+import { InputType } from "./intermediates";
+import { OperationType } from "./genericTypes";
+import compact from "./compact";
 
 const objectPropertyForGraphQLInputField = (field: GraphQLInputField) =>
   objectProperty(identifier(field.name), identifier(field.name), false, true);
@@ -28,23 +33,37 @@ const objectPropertyForGraphQLInputField = (field: GraphQLInputField) =>
 const identifierForGraphQLInputField = (field: GraphQLInputField): Identifier =>
   typedIdentifier(field.name, typeForInputType(InputType(field.type)));
 
-const typedIdentifier = (name: string, type: TSType): Identifier => ({
+export const typedIdentifier = (name: string, type: TSType): Identifier => ({
   ...identifier(name),
   typeAnnotation: TSTypeAnnotation(type) as any
 });
 
-const identifierForVariable = (variable: { name: string; type: GraphQLType }): Identifier =>
-  typedIdentifier(variable.name, typeForInputType(InputType(variable.type as GraphQLInputType)));
+const identifierForVariable = (variable: {
+  name: string;
+  type: GraphQLType;
+}): Identifier =>
+  typedIdentifier(
+    variable.name,
+    typeForInputType(InputType(variable.type as GraphQLInputType))
+  );
 
 const objectPropertiesForOperation = (operation: Operation): ObjectProperty[] =>
   compact(
-    objectProperty(identifier('query'), stringIdentifier(operation.operationName)),
+    objectProperty(
+      identifier("query"),
+      stringIdentifier(operation.operationName)
+    ),
     operation.variables.length > 0 &&
       objectProperty(
-        identifier('variables'),
+        identifier("variables"),
         objectExpression(
           operation.variables.map(variable =>
-            objectProperty(identifier(variable.name), identifier(variable.name), false, true)
+            objectProperty(
+              identifier(variable.name),
+              identifier(variable.name),
+              false,
+              true
+            )
           )
         )
       )
@@ -56,14 +75,19 @@ const constructorDeclaration = (
   returnType: TSType,
   properties: ObjectProperty[]
 ) =>
-  variableDeclaration('const', [
+  variableDeclaration("const", [
     variableDeclarator(identifier(name), {
-      ...arrowFunctionExpression(parameters, parenthesizedExpression(objectExpression(properties))),
+      ...arrowFunctionExpression(
+        parameters,
+        parenthesizedExpression(objectExpression(properties))
+      ),
       returnType: TSTypeAnnotation(returnType) as any
     } as ArrowFunctionExpression)
   ]);
 
-export const constructorDeclarationForGraphQLInputObjectType = (type: GraphQLInputObjectType) =>
+export const constructorDeclarationForGraphQLInputObjectType = (
+  type: GraphQLInputObjectType
+) =>
   ((fields: GraphQLInputField[]) =>
     constructorDeclaration(
       type.name,

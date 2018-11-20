@@ -74,6 +74,8 @@ export type HumanFragment = {
     id: string;
   }>)>[]>;
 };
+
+export const isHumanFragment = (fragment: any): fragment is HumanFragment => fragment && (fragment.homePlanet == null || typeof fragment.homePlanet == \\"string\\") && (fragment.friends == null || (Array.isArray(fragment.friends) && fragment.friends.slice(0, 5).reduce((accum: any, next: any) => accum && (next == null || (next && ((next.__typename == \\"Human\\" && typeof next.name == \\"string\\") || (next.__typename == \\"Droid\\" && typeof next.id == \\"string\\")))), true)));
 ",
     },
     "fileName": "HumanFragment.ts",
@@ -90,6 +92,8 @@ export const droidFragmentString = droidFragmentRawString;
 export type DroidFragment = {
   appearsIn: Maybe<Episode>[];
 };
+
+export const isDroidFragment = (fragment: any): fragment is DroidFragment => fragment && Array.isArray(fragment.appearsIn) && fragment.appearsIn.slice(0, 5).reduce((accum: any, next: any) => accum && (next == null || next == \\"NEWHOPE\\" || next == \\"EMPIRE\\" || next == \\"JEDI\\"), true);
 ",
     },
     "fileName": "DroidFragment.ts",
@@ -155,6 +159,8 @@ export const simpleFragmentString = simpleFragmentRawString;
 export type SimpleFragment = {
   name: string;
 };
+
+export const isSimpleFragment = (fragment: any): fragment is SimpleFragment => fragment && typeof fragment.name == \\"string\\";
 ",
     },
     "fileName": "SimpleFragment.ts",
@@ -162,7 +168,7 @@ export type SimpleFragment = {
   },
   Object {
     "content": TypescriptGeneratedFile {
-      "fileContents": "import { SimpleFragment } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/SimpleFragment\\";
+      "fileContents": "import { SimpleFragment, isSimpleFragment } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/SimpleFragment\\";
 
 import anotherFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
@@ -171,6 +177,8 @@ export const anotherFragmentString = anotherFragmentRawString;
 export type AnotherFragment = SimpleFragment & {
   id: string;
 };
+
+export const isAnotherFragment = (fragment: any): fragment is AnotherFragment => (isSimpleFragment(fragment) as boolean) && typeof fragment.id == \\"string\\";
 ",
     },
     "fileName": "AnotherFragment.ts",
@@ -200,6 +208,8 @@ export const simpleFragmentString = simpleFragmentRawString;
 export type SimpleFragment = {
   name: string;
 };
+
+export const isSimpleFragment = (fragment: any): fragment is SimpleFragment => fragment && typeof fragment.name == \\"string\\";
 ",
     },
     "fileName": "SimpleFragment.ts",
@@ -209,7 +219,7 @@ export type SimpleFragment = {
     "content": TypescriptGeneratedFile {
       "fileContents": "import { Maybe, Episode, If } from \\"../../__generated__/globalTypes\\";
 
-import { SimpleFragment } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/SimpleFragment\\";
+import { SimpleFragment, isSimpleFragment } from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/__generated__/SimpleFragment\\";
 
 import anotherFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCards/apollo-cli/GraphQL request\\";
 
@@ -220,6 +230,8 @@ export type AnotherFragment = SimpleFragment & {
 } & (If<\\"Human\\", {
   appearsIn: Maybe<Episode>[];
 }> | If<\\"Droid\\", {}>);
+
+export const isAnotherFragment = (fragment: any): fragment is AnotherFragment => (isSimpleFragment(fragment) as boolean) && typeof fragment.id == \\"string\\" && ((fragment.__typename == \\"Human\\" && Array.isArray(fragment.appearsIn) && fragment.appearsIn.slice(0, 5).reduce((accum: any, next: any) => accum && (next == null || next == \\"NEWHOPE\\" || next == \\"EMPIRE\\" || next == \\"JEDI\\"), true)) || fragment.__typename == \\"Droid\\");
 ",
     },
     "fileName": "AnotherFragment.ts",
@@ -522,6 +534,8 @@ export const simpleFragmentString = simpleFragmentRawString;
 export type SimpleFragment = {
   name: string;
 };
+
+export const isSimpleFragment = (fragment: any): fragment is SimpleFragment => fragment && typeof fragment.name == \\"string\\";
 ",
     },
     "fileName": "SimpleFragment.ts",
@@ -584,6 +598,8 @@ export const simpleFragmentString = simpleFragmentRawString;
 export type SimpleFragment = {
   name: string;
 };
+
+export const isSimpleFragment = (fragment: any): fragment is SimpleFragment => fragment && typeof fragment.name == \\"string\\";
 ",
     },
     "fileName": "SimpleFragment.ts",
@@ -693,8 +709,8 @@ export enum Episode {
 
 export type ReviewInput = {
   stars: number;
-  commentary: Optional<string>;
-  favorite_color: Optional<ColorInput>;
+  commentary?: string;
+  favorite_color?: ColorInput;
 };
 
 export const ReviewInput = (stars: number, commentary: Optional<string>, favorite_color: Optional<ColorInput>): ReviewInput => ({

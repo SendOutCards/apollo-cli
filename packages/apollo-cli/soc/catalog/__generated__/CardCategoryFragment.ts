@@ -1,4 +1,7 @@
-import { MinimalSendableCardFragment } from "./MinimalSendableCardFragment";
+import {
+  MinimalSendableCardFragment,
+  isMinimalSendableCardFragment
+} from "./MinimalSendableCardFragment";
 
 import cardCategoryFragmentRawString from "../CardCategoryFragment.graphql";
 
@@ -10,3 +13,19 @@ export type CardCategoryFragment = {
   description: string;
   cards: MinimalSendableCardFragment[];
 };
+
+export const isCardCategoryFragment = (
+  fragment: any
+): fragment is CardCategoryFragment =>
+  fragment &&
+  fragment.__typename == "CardCategory" &&
+  typeof fragment.id == "string" &&
+  typeof fragment.description == "string" &&
+  Array.isArray(fragment.cards) &&
+  fragment.cards
+    .slice(0, 5)
+    .reduce(
+      (accum, next) =>
+        accum && (isMinimalSendableCardFragment(next) as boolean),
+      true
+    );

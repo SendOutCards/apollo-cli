@@ -15,7 +15,8 @@ import {
   GraphQLInputType,
   isInputObjectType,
   GraphQLLeafType,
-  isCompositeType
+  isCompositeType,
+  GraphQLEnumType
 } from "graphql";
 
 export type List<T> = {
@@ -67,6 +68,7 @@ export type InputObject = {
 export type Enum = {
   kind: "Enum";
   name: string;
+  values: string[];
 };
 
 export type Scalar = {
@@ -96,7 +98,11 @@ const InputObject = (name: string): InputObject => ({
   name
 });
 
-const Enum = (name: string): Enum => ({ kind: "Enum", name });
+const Enum = (type: GraphQLEnumType): Enum => ({
+  kind: "Enum",
+  name: type.name,
+  values: type.getValues().map(value => value.value)
+});
 
 const Scalar = (name: string, isTypeName?: boolean): Scalar => ({
   kind: "Scalar",
@@ -105,7 +111,7 @@ const Scalar = (name: string, isTypeName?: boolean): Scalar => ({
 });
 
 const Leaf = (type: GraphQLLeafType): Leaf =>
-  isEnumType(type) ? Enum(type.name) : Scalar(type.name);
+  isEnumType(type) ? Enum(type) : Scalar(type.name);
 
 const fail = (message: string): any => {
   throw Error(message);

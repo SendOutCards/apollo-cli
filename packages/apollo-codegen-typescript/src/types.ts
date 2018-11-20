@@ -124,23 +124,27 @@ const typeForAnyObject = (object: AnyObject): TSType =>
 
 const emptyType = TSTypeLiteral([]);
 
-const unionTypeForTypeConditions = (
+export const remainingPossibleTypes = (
   typeConditions: AnyObject[],
   possibleTypes: Set<string>
-): TSUnionType => {
-  const remainingPossibleTypes = possibleTypes.subtract(
+): Set<string> =>
+  possibleTypes.subtract(
     typeConditions.reduce(
       (possibleTypes, type) => possibleTypes.union(type.possibleTypes),
       Set<string>()
     )
   );
+
+const unionTypeForTypeConditions = (
+  typeConditions: AnyObject[],
+  possibleTypes: Set<string>
+): TSUnionType => {
+  const remainingTypes = remainingPossibleTypes(typeConditions, possibleTypes);
   return TSUnionType(
     typeConditions
       .map(type => IfType(type.possibleTypes, typeForAnyObject(type)))
       .concat(
-        remainingPossibleTypes.size > 0
-          ? [IfType(remainingPossibleTypes, emptyType)]
-          : []
+        remainingTypes.size > 0 ? [IfType(remainingTypes, emptyType)] : []
       )
   );
 };
@@ -179,11 +183,20 @@ export const enumDeclarationForGraphQLEnumType = (type: GraphQLEnumType) =>
     type.getValues().map(enumMemberForGraphQLEnumValue)
   );
 
-const propertySignatureForGraphQLInputField = (field: GraphQLInputField) =>
-  TSPropertySignature(
-    identifier(field.name),
-    TSTypeAnnotation(typeForInputType(InputType(field.type)))
-  );
+const propertySignatureForGraphQLInputField = (field: GraphQLInputField) => {
+  const inputType = InputType(field.type);
+  return {
+    ...TSPropertySignature(
+      identifier(field.name),
+      TSTypeAnnotation(
+        inputType.kind == "Maybe"
+          ? typeForInputType(inputType.ofType)
+          : typeForInputType(inputType)
+      )
+    ),
+    optional: InputType(field.type).kind == "Maybe"
+  };
+};
 
 const typeForGraphQLInputFieldMap = (map: GraphQLInputFieldMap) =>
   TSTypeLiteral(Object.values(map).map(propertySignatureForGraphQLInputField));

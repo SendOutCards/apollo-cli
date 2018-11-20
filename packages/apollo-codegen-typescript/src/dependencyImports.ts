@@ -30,7 +30,12 @@ const importDeclarationForFragmentDependency = (
       fragmentDependency.importType &&
         importSpecifierWithIdentifier(identifier(fragmentDependency.name)),
       fragmentDependency.importString &&
-        stringImportSpecifier(fragmentDependency.name)
+        stringImportSpecifier(fragmentDependency.name),
+      fragmentDependency.importType &&
+        !fragmentDependency.importString &&
+        importSpecifierWithIdentifier(
+          identifier(`is${fragmentDependency.name}`)
+        )
     ),
     stringLiteral(
       relativePath(
