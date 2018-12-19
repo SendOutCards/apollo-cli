@@ -13,6 +13,7 @@ import { constructorDeclarationForGraphQLInputObjectType } from "./constructors"
 import { isEnumType, isInputObjectType } from "graphql";
 import { operationFile } from "./operationFile";
 import { fragmentFile } from "./fragmentFile";
+import { normalizedDataDeclarations } from "./normalizedDataDeclaration";
 
 class TypescriptGeneratedFile implements BasicGeneratedFile {
   fileContents: string;
@@ -81,17 +82,12 @@ export function generateLocalSource(
 const globalTypes = `export type Maybe<T> = T | null;
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
-export type Operation<Data> = { query: string; variables?: any };`;
+export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }`;
 
 export function generateGlobalSource(
   context: CompilerContext
 ): TypescriptGeneratedFile {
-  // Object.values(context.schema.getTypeMap())
-  //   .filter(type => isCompositeType(type))
-  //   .map(type => type as GraphQLCompositeType)
-  //   .forEach(type => {
-  //     console.log(type);
-  //   });
   const printer = new Printer();
   printer.enqueue(globalTypes);
   context.typesUsed.forEach(type => {
@@ -107,6 +103,9 @@ export function generateGlobalSource(
         exportDeclaration(constructorDeclarationForGraphQLInputObjectType(type))
       );
     }
+  });
+  normalizedDataDeclarations(context).forEach(declaration => {
+    printer.enqueue(exportDeclaration(declaration));
   });
   const result = printer.print();
   return new TypescriptGeneratedFile(result);

@@ -6,6 +6,11 @@ import {
 } from "./ReasonToSendFragment";
 
 import {
+  MinimalSendableCardFragment,
+  minimalSendableCardFragmentString
+} from "./MinimalSendableCardFragment";
+
+import {
   CollectionFragment,
   collectionFragmentString
 } from "./CollectionFragment";
@@ -17,24 +22,25 @@ import {
   cardCategoryFragmentString
 } from "./CardCategoryFragment";
 
-import { minimalSendableCardFragmentString } from "./MinimalSendableCardFragment";
-
 import getCatalogRawString from "../GetCatalog.graphql";
 
 const getCatalogString = [
   getCatalogRawString,
   reasonToSendFragmentString,
+  minimalSendableCardFragmentString,
   collectionFragmentString,
   myCardFragmentString,
-  cardCategoryFragmentString,
-  minimalSendableCardFragmentString
+  cardCategoryFragmentString
 ].join("\n\n");
 
 export type GetCatalog = {
   firstReasonToSend: ReasonToSendFragment[];
   reasonsToSend: ReasonToSendFragment[];
+  favoritedCards: MinimalSendableCardFragment[];
+  featuredCards: MinimalSendableCardFragment[];
   collections: CollectionFragment[];
   myCards: MyCardFragment[];
+  legacyPicturePlusCards: MinimalSendableCardFragment[];
   cardCategories: CardCategoryFragment[];
 };
 

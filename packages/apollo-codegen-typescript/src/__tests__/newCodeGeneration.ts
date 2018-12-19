@@ -68,6 +68,7 @@ describe("Typescript newCodeGeneration", () => {
     const context = compile(`
       mutation ReviewMovie($episode: Episode, $review: ReviewInput) {
         createReview(episode: $episode, review: $review) {
+          __typename
           stars
           commentary
         }
@@ -88,6 +89,8 @@ describe("Typescript newCodeGeneration", () => {
   test("simple fragment", () => {
     const context = compile(`
       fragment SimpleFragment on Character {
+        __typename
+        id
         name
       }
     `);
@@ -106,6 +109,7 @@ describe("Typescript newCodeGeneration", () => {
   test("fragment with fragment spreads", () => {
     const context = compile(`
       fragment SimpleFragment on Character {
+        __typename
         name
       }
 
@@ -129,6 +133,7 @@ describe("Typescript newCodeGeneration", () => {
   test("fragment with fragment spreads with inline fragment", () => {
     const context = compile(`
       fragment SimpleFragment on Character {
+        __typename
         name
       }
 
@@ -156,6 +161,7 @@ describe("Typescript newCodeGeneration", () => {
   test("query with fragment spreads", () => {
     const context = compile(`
       fragment SimpleFragment on Character {
+        __typename
         name
       }
 
@@ -205,6 +211,7 @@ describe("Typescript newCodeGeneration", () => {
     const context = compile(`
       query HeroName($episode: Episode) {
         hero(episode: $episode) {
+          __typename
           name
           id
 
@@ -237,6 +244,7 @@ describe("Typescript newCodeGeneration", () => {
     const context = compile(`
       query HeroName($episode: Episode) {
         hero(episode: $episode) {
+          __typename
           name
           id
 
@@ -280,6 +288,7 @@ describe("Typescript newCodeGeneration", () => {
       }
 
       fragment HumanFragment on Human {
+        __typename
         homePlanet
         friends {
           ... on Human {
@@ -293,6 +302,7 @@ describe("Typescript newCodeGeneration", () => {
       }
 
       fragment DroidFragment on Droid {
+        __typename
         appearsIn
       }
     `);

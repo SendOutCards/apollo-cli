@@ -6,15 +6,21 @@ import {
 } from "./CollectionFragment";
 
 import {
-  MinimalSendableCardFragment,
-  minimalSendableCardFragmentString
-} from "./MinimalSendableCardFragment";
+  DetailedSendableCardFragment,
+  detailedSendableCardFragmentString
+} from "./DetailedSendableCardFragment";
+
+import { sendableCardDetailsFragmentString } from "./SendableCardDetailsFragment";
+
+import { minimalSendableCardFragmentString } from "./MinimalSendableCardFragment";
 
 import getCollectionRawString from "../GetCollection.graphql";
 
 const getCollectionString = [
   getCollectionRawString,
   collectionFragmentString,
+  detailedSendableCardFragmentString,
+  sendableCardDetailsFragmentString,
   minimalSendableCardFragmentString
 ].join("\n\n");
 
@@ -23,7 +29,7 @@ export type GetCollection = {
     CollectionFragment & {
       description: string;
       reasonToSend: boolean;
-      cards: MinimalSendableCardFragment[];
+      cards: DetailedSendableCardFragment[];
     }
   >;
 };

@@ -41,7 +41,7 @@ import {
 } from "@babel/types";
 
 import {
-  AnyObject,
+  FragmentOrSelection,
   FragmentReference,
   InlineSelection,
   Field,
@@ -55,7 +55,7 @@ import { OptionalType, MaybeType, IfType, PartialType } from "./genericTypes";
 export const typeReference = (name: string): TSTypeReference =>
   TSTypeReference(identifier(name));
 
-const typeForScalar = (scalar: Scalar): TSType => {
+export const typeForScalar = (scalar: Scalar): TSType => {
   switch (scalar.name) {
     case "Int":
     case "Float":
@@ -82,7 +82,7 @@ export const typeForInputType = (type: InputType): TSType => {
   }
 };
 
-const typeForTypename = (typename: Typename): TSType =>
+export const typeForTypename = (typename: Typename): TSType =>
   TSUnionType(
     typename.possibleTypes
       .toArray()
@@ -117,7 +117,7 @@ const propertySignatureForField = (field: Field): TSPropertySignature =>
 const typeForFragmentReference = (type: FragmentReference): TSType =>
   typeReference(type.name);
 
-const typeForAnyObject = (object: AnyObject): TSType =>
+const typeForAnyObject = (object: FragmentOrSelection): TSType =>
   object.kind == "FragmentReference"
     ? typeForFragmentReference(object)
     : typeForInlineSelection(object);
@@ -125,7 +125,7 @@ const typeForAnyObject = (object: AnyObject): TSType =>
 const emptyType = TSTypeLiteral([]);
 
 export const remainingPossibleTypes = (
-  typeConditions: AnyObject[],
+  typeConditions: FragmentOrSelection[],
   possibleTypes: Set<string>
 ): Set<string> =>
   possibleTypes.subtract(
@@ -136,7 +136,7 @@ export const remainingPossibleTypes = (
   );
 
 const unionTypeForTypeConditions = (
-  typeConditions: AnyObject[],
+  typeConditions: FragmentOrSelection[],
   possibleTypes: Set<string>
 ): TSUnionType => {
   const remainingTypes = remainingPossibleTypes(typeConditions, possibleTypes);
@@ -190,7 +190,7 @@ const propertySignatureForGraphQLInputField = (field: GraphQLInputField) => {
       identifier(field.name),
       TSTypeAnnotation(
         inputType.kind == "Maybe"
-          ? typeForInputType(inputType.ofType)
+          ? MaybeType(typeForInputType(inputType.ofType))
           : typeForInputType(inputType)
       )
     ),

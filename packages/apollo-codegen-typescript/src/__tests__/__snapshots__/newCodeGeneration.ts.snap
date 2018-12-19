@@ -37,6 +37,7 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
 
 export enum EnumCommentTestCase {
   first = \\"first\\",
@@ -52,6 +53,8 @@ export const Duplicate = (propA: EnumCommentTestCase, propB: EnumCommentTestCase
   propA,
   propB
 });
+
+export type NormalizedData = {};
 ",
 }
 `;
@@ -67,6 +70,7 @@ import humanFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCar
 export const humanFragmentString = humanFragmentRawString;
 
 export type HumanFragment = {
+  __typename: \\"Human\\";
   homePlanet: Maybe<string>;
   friends: Maybe<Maybe<(If<\\"Human\\", {
     name: string;
@@ -75,7 +79,7 @@ export type HumanFragment = {
   }>)>[]>;
 };
 
-export const isHumanFragment = (fragment: any): fragment is HumanFragment => fragment && (fragment.homePlanet == null || typeof fragment.homePlanet == \\"string\\") && (fragment.friends == null || (Array.isArray(fragment.friends) && fragment.friends.slice(0, 5).reduce((accum: any, next: any) => accum && (next == null || (next && ((next.__typename == \\"Human\\" && typeof next.name == \\"string\\") || (next.__typename == \\"Droid\\" && typeof next.id == \\"string\\")))), true)));
+export const isHumanFragment = (fragment: any): fragment is HumanFragment => fragment && fragment.__typename == \\"Human\\" && (fragment.homePlanet == null || typeof fragment.homePlanet == \\"string\\") && (fragment.friends == null || (Array.isArray(fragment.friends) && fragment.friends.slice(0, 5).reduce((accum: any, next: any) => accum && (next == null || (next && ((next.__typename == \\"Human\\" && typeof next.name == \\"string\\") || (next.__typename == \\"Droid\\" && typeof next.id == \\"string\\")))), true)));
 ",
     },
     "fileName": "HumanFragment.ts",
@@ -90,10 +94,11 @@ import droidFragmentRawString from \\"../../Users/Brad/Developer/Node/SendOutCar
 export const droidFragmentString = droidFragmentRawString;
 
 export type DroidFragment = {
+  __typename: \\"Droid\\";
   appearsIn: Maybe<Episode>[];
 };
 
-export const isDroidFragment = (fragment: any): fragment is DroidFragment => fragment && Array.isArray(fragment.appearsIn) && fragment.appearsIn.slice(0, 5).reduce((accum: any, next: any) => accum && (next == null || next == \\"NEWHOPE\\" || next == \\"EMPIRE\\" || next == \\"JEDI\\"), true);
+export const isDroidFragment = (fragment: any): fragment is DroidFragment => fragment && fragment.__typename == \\"Droid\\" && Array.isArray(fragment.appearsIn) && fragment.appearsIn.slice(0, 5).reduce((accum: any, next: any) => accum && (next == null || next == \\"NEWHOPE\\" || next == \\"EMPIRE\\" || next == \\"JEDI\\"), true);
 ",
     },
     "fileName": "DroidFragment.ts",
@@ -138,12 +143,37 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
 
 export enum Episode {
   NEWHOPE = \\"NEWHOPE\\",
   EMPIRE = \\"EMPIRE\\",
   JEDI = \\"JEDI\\",
 }
+
+export type NormalizedHuman = {
+  name: string;
+  id: string;
+  __typename: \\"Human\\";
+  homePlanet: Maybe<string>;
+  friends: Maybe<Maybe<{
+    name: string;
+  } | {
+    id: string;
+  }>[]>;
+};
+
+export type NormalizedDroid = {
+  name: string;
+  id: string;
+  __typename: \\"Droid\\";
+  appearsIn: Maybe<Episode>[];
+};
+
+export type NormalizedData = {
+  Human: ById<NormalizedHuman>;
+  Droid: ById<NormalizedDroid>;
+};
 ",
 }
 `;
@@ -157,10 +187,11 @@ Array [
 export const simpleFragmentString = simpleFragmentRawString;
 
 export type SimpleFragment = {
+  __typename: \\"Human\\" | \\"Droid\\";
   name: string;
 };
 
-export const isSimpleFragment = (fragment: any): fragment is SimpleFragment => fragment && typeof fragment.name == \\"string\\";
+export const isSimpleFragment = (fragment: any): fragment is SimpleFragment => fragment && (fragment.__typename == \\"Human\\" || fragment.__typename == \\"Droid\\") && typeof fragment.name == \\"string\\";
 ",
     },
     "fileName": "SimpleFragment.ts",
@@ -193,6 +224,9 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
+
+export type NormalizedData = {};
 ",
 }
 `;
@@ -206,10 +240,11 @@ Array [
 export const simpleFragmentString = simpleFragmentRawString;
 
 export type SimpleFragment = {
+  __typename: \\"Human\\" | \\"Droid\\";
   name: string;
 };
 
-export const isSimpleFragment = (fragment: any): fragment is SimpleFragment => fragment && typeof fragment.name == \\"string\\";
+export const isSimpleFragment = (fragment: any): fragment is SimpleFragment => fragment && (fragment.__typename == \\"Human\\" || fragment.__typename == \\"Droid\\") && typeof fragment.name == \\"string\\";
 ",
     },
     "fileName": "SimpleFragment.ts",
@@ -246,12 +281,15 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
 
 export enum Episode {
   NEWHOPE = \\"NEWHOPE\\",
   EMPIRE = \\"EMPIRE\\",
   JEDI = \\"JEDI\\",
 }
+
+export type NormalizedData = {};
 ",
 }
 `;
@@ -287,6 +325,9 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
+
+export type NormalizedData = {};
 ",
 }
 `;
@@ -326,12 +367,15 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
 
 export enum Episode {
   NEWHOPE = \\"NEWHOPE\\",
   EMPIRE = \\"EMPIRE\\",
   JEDI = \\"JEDI\\",
 }
+
+export type NormalizedData = {};
 ",
 }
 `;
@@ -346,6 +390,7 @@ import heroNameString from \\"../../Users/Brad/Developer/Node/SendOutCards/apoll
 
 export type HeroName = {
   hero: Maybe<{
+    __typename: \\"Human\\" | \\"Droid\\";
     name: string;
     id: string;
   } & (If<\\"Human\\", {
@@ -378,12 +423,37 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
 
 export enum Episode {
   NEWHOPE = \\"NEWHOPE\\",
   EMPIRE = \\"EMPIRE\\",
   JEDI = \\"JEDI\\",
 }
+
+export type NormalizedHuman = {
+  __typename: \\"Human\\";
+  name: string;
+  id: string;
+  homePlanet: Maybe<string>;
+  friends: Maybe<Maybe<{
+    name: string;
+  } | {
+    name: string;
+  }>[]>;
+};
+
+export type NormalizedDroid = {
+  __typename: \\"Droid\\";
+  name: string;
+  id: string;
+  appearsIn: Maybe<Episode>[];
+};
+
+export type NormalizedData = {
+  Human: ById<NormalizedHuman>;
+  Droid: ById<NormalizedDroid>;
+};
 ",
 }
 `;
@@ -398,6 +468,7 @@ import heroNameString from \\"../../Users/Brad/Developer/Node/SendOutCards/apoll
 
 export type HeroName = {
   hero: Maybe<{
+    __typename: \\"Human\\" | \\"Droid\\";
     name: string;
     id: string;
   } & (If<\\"Human\\", {
@@ -433,12 +504,42 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
 
 export enum Episode {
   NEWHOPE = \\"NEWHOPE\\",
   EMPIRE = \\"EMPIRE\\",
   JEDI = \\"JEDI\\",
 }
+
+export type NormalizedHuman = {
+  __typename: \\"Human\\";
+  name: string;
+  id: string;
+  homePlanet: Maybe<string>;
+  friends: Maybe<Maybe<{
+    name: string;
+  } | {
+    name: string;
+  }>[]>;
+};
+
+export type NormalizedDroid = {
+  __typename: \\"Droid\\";
+  name: string;
+  id: string;
+  appearsIn: Maybe<Episode>[];
+  friends: Maybe<Maybe<{
+    id: string;
+  } | {
+    id: string;
+  }>[]>;
+};
+
+export type NormalizedData = {
+  Human: ById<NormalizedHuman>;
+  Droid: ById<NormalizedDroid>;
+};
 ",
 }
 `;
@@ -474,11 +575,14 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
 
 export enum EnumCommentTestCase {
   first = \\"first\\",
   second = \\"second\\",
 }
+
+export type NormalizedData = {};
 ",
 }
 `;
@@ -514,11 +618,14 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
 
 export enum EnumCommentTestCase {
   first = \\"first\\",
   second = \\"second\\",
 }
+
+export type NormalizedData = {};
 ",
 }
 `;
@@ -532,10 +639,11 @@ Array [
 export const simpleFragmentString = simpleFragmentRawString;
 
 export type SimpleFragment = {
+  __typename: \\"Human\\" | \\"Droid\\";
   name: string;
 };
 
-export const isSimpleFragment = (fragment: any): fragment is SimpleFragment => fragment && typeof fragment.name == \\"string\\";
+export const isSimpleFragment = (fragment: any): fragment is SimpleFragment => fragment && (fragment.__typename == \\"Human\\" || fragment.__typename == \\"Droid\\") && typeof fragment.name == \\"string\\";
 ",
     },
     "fileName": "SimpleFragment.ts",
@@ -577,12 +685,30 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
 
 export enum Episode {
   NEWHOPE = \\"NEWHOPE\\",
   EMPIRE = \\"EMPIRE\\",
   JEDI = \\"JEDI\\",
 }
+
+export type NormalizedHuman = {
+  id: string;
+  __typename: \\"Human\\";
+  name: string;
+};
+
+export type NormalizedDroid = {
+  id: string;
+  __typename: \\"Droid\\";
+  name: string;
+};
+
+export type NormalizedData = {
+  Human: ById<NormalizedHuman>;
+  Droid: ById<NormalizedDroid>;
+};
 ",
 }
 `;
@@ -596,10 +722,12 @@ Array [
 export const simpleFragmentString = simpleFragmentRawString;
 
 export type SimpleFragment = {
+  __typename: \\"Human\\" | \\"Droid\\";
+  id: string;
   name: string;
 };
 
-export const isSimpleFragment = (fragment: any): fragment is SimpleFragment => fragment && typeof fragment.name == \\"string\\";
+export const isSimpleFragment = (fragment: any): fragment is SimpleFragment => fragment && (fragment.__typename == \\"Human\\" || fragment.__typename == \\"Droid\\") && typeof fragment.id == \\"string\\" && typeof fragment.name == \\"string\\";
 ",
     },
     "fileName": "SimpleFragment.ts",
@@ -614,6 +742,9 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
+
+export type NormalizedData = {};
 ",
 }
 `;
@@ -654,12 +785,30 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
 
 export enum Episode {
   NEWHOPE = \\"NEWHOPE\\",
   EMPIRE = \\"EMPIRE\\",
   JEDI = \\"JEDI\\",
 }
+
+export type NormalizedHuman = {
+  __typename: \\"Human\\";
+  name: string;
+  id: string;
+};
+
+export type NormalizedDroid = {
+  __typename: \\"Droid\\";
+  name: string;
+  id: string;
+};
+
+export type NormalizedData = {
+  Human: ById<NormalizedHuman>;
+  Droid: ById<NormalizedDroid>;
+};
 ",
 }
 `;
@@ -674,6 +823,7 @@ import reviewMovieString from \\"../../Users/Brad/Developer/Node/SendOutCards/ap
 
 export type ReviewMovie = {
   createReview: Maybe<{
+    __typename: \\"Review\\";
     stars: number;
     commentary: Maybe<string>;
   }>;
@@ -700,6 +850,7 @@ TypescriptGeneratedFile {
 export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
+export type ById<T> = { [id: string]: T | undefined }
 
 export enum Episode {
   NEWHOPE = \\"NEWHOPE\\",
@@ -709,8 +860,8 @@ export enum Episode {
 
 export type ReviewInput = {
   stars: number;
-  commentary?: string;
-  favorite_color?: ColorInput;
+  commentary?: Maybe<string>;
+  favorite_color?: Maybe<ColorInput>;
 };
 
 export const ReviewInput = (stars: number, commentary: Optional<string>, favorite_color: Optional<ColorInput>): ReviewInput => ({
@@ -730,6 +881,8 @@ export const ColorInput = (red: number, green: number, blue: number): ColorInput
   green,
   blue
 });
+
+export type NormalizedData = {};
 ",
 }
 `;

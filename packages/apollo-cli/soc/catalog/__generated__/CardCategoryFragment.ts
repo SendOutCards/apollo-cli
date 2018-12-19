@@ -25,7 +25,7 @@ export const isCardCategoryFragment = (
   fragment.cards
     .slice(0, 5)
     .reduce(
-      (accum, next) =>
+      (accum: any, next: any) =>
         accum && (isMinimalSendableCardFragment(next) as boolean),
       true
     );

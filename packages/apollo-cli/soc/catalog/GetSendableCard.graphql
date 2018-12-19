@@ -1,6 +1,5 @@
 query GetSendableCard($id: ID!) {
   sendableCard(id: $id) {
-    ...MinimalSendableCardFragment
-    ...SendableCardDetailsFragment
+    ...DetailedSendableCardFragment
   }
 }

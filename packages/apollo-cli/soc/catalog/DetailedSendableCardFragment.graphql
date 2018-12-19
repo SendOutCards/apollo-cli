@@ -1,0 +1,4 @@
+fragment DetailedSendableCardFragment on SendableCard {
+  ...MinimalSendableCardFragment
+  ...SendableCardDetailsFragment
+}

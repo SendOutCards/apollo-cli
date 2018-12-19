@@ -11,7 +11,7 @@ export const reasonToSendFragmentString = reasonToSendFragmentRawString;
 
 export type ReasonToSendFragment = CollectionFragment & {
   description: string;
-  cards: MinimalSendableCardFragment[];
+  minimalCards: MinimalSendableCardFragment[];
 };
 
 export const isReasonToSendFragment = (
@@ -19,11 +19,11 @@ export const isReasonToSendFragment = (
 ): fragment is ReasonToSendFragment =>
   (isCollectionFragment(fragment) as boolean) &&
   typeof fragment.description == "string" &&
-  Array.isArray(fragment.cards) &&
-  fragment.cards
+  Array.isArray(fragment.minimalCards) &&
+  fragment.minimalCards
     .slice(0, 5)
     .reduce(
-      (accum, next) =>
+      (accum: any, next: any) =>
         accum && (isMinimalSendableCardFragment(next) as boolean),
       true
     );

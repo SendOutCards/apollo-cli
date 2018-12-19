@@ -54,11 +54,11 @@ export type InlineSelection = {
   possibleTypes: Set<string>;
   intersections: FragmentReference[];
   fields: Field[];
-  booleanConditions: AnyObject[];
-  typeConditions: AnyObject[];
+  booleanConditions: FragmentOrSelection[];
+  typeConditions: FragmentOrSelection[];
 };
 
-export type AnyObject = FragmentReference | InlineSelection;
+export type FragmentOrSelection = FragmentReference | InlineSelection;
 
 export type InputObject = {
   kind: "InputObject";
@@ -77,21 +77,21 @@ export type Scalar = {
   isTypename: boolean;
 };
 
-type Leaf = Enum | Scalar;
+export type Leaf = Enum | Scalar;
 
-type NonListType<T> = Maybe<T> | T;
+export interface MaybeType<T> extends Maybe<Type<T>> {}
 
-type NonNullType<T> = List<NonListType<T>> | T;
+export interface ListType<T> extends List<Type<T>> {}
 
-type Type<T> = Maybe<NonNullType<T>> | NonNullType<T>;
+export type Type<T> = T | MaybeType<T> | ListType<T>;
 
-export type OutputType = Type<AnyObject | Leaf>;
+export type OutputType = Type<FragmentOrSelection | Leaf>;
 
 export type InputType = Type<InputObject | Leaf>;
 
-const List = <T>(ofType: T): List<T> => ({ kind: "List", ofType });
+export const List = <T>(ofType: T): List<T> => ({ kind: "List", ofType });
 
-const Maybe = <T>(ofType: T): Maybe<T> => ({ kind: "Maybe", ofType });
+export const Maybe = <T>(ofType: T): Maybe<T> => ({ kind: "Maybe", ofType });
 
 const InputObject = (name: string): InputObject => ({
   kind: "InputObject",
@@ -117,10 +117,10 @@ const fail = (message: string): any => {
   throw Error(message);
 };
 
-const AnyObjectOrLeaf = (
+const FragmentOrSelectionOrLeaf = (
   type: Exclude<GraphQLOutputType, GraphQLList<any> | GraphQLNonNull<any>>,
   selection?: InlineSelection
-): AnyObject | Leaf =>
+): FragmentOrSelection | Leaf =>
   selection
     ? selection
     : isCompositeType(type)
@@ -130,18 +130,18 @@ const AnyObjectOrLeaf = (
 const NonListOutputType = (
   type: Exclude<GraphQLOutputType, GraphQLList<any>>,
   selection?: InlineSelection
-): NonListType<AnyObject | Leaf> =>
+): OutputType =>
   isNonNullType(type)
-    ? AnyObjectOrLeaf(type.ofType, selection)
-    : Maybe(AnyObjectOrLeaf(type, selection));
+    ? FragmentOrSelectionOrLeaf(type.ofType, selection)
+    : Maybe(FragmentOrSelectionOrLeaf(type, selection));
 
 const NonNullOutputType = (
   type: Exclude<GraphQLOutputType, GraphQLNonNull<any>>,
   selection?: InlineSelection
-): NonNullType<AnyObject | Leaf> =>
+): OutputType =>
   isListType(type)
     ? List(NonListOutputType(type.ofType, selection))
-    : AnyObjectOrLeaf(type, selection);
+    : FragmentOrSelectionOrLeaf(type, selection);
 
 const OutputType = (
   type: GraphQLOutputType,
@@ -158,14 +158,14 @@ const InputObjectOrLeaf = (
 
 const NonListInputType = (
   type: Exclude<GraphQLInputType, GraphQLList<any>>
-): NonListType<InputObject | Leaf> =>
+): InputType =>
   isNonNullType(type)
     ? InputObjectOrLeaf(type.ofType)
     : Maybe(InputObjectOrLeaf(type));
 
 const NonNullInputType = (
   type: Exclude<GraphQLInputType, GraphQLNonNull<any>>
-): NonNullType<InputObject | Leaf> =>
+): InputType =>
   isListType(type)
     ? List(NonListInputType(type.ofType))
     : InputObjectOrLeaf(type);
@@ -267,7 +267,7 @@ export const InlineSelection = (
   );
 };
 
-export const AnyObject = (selectionSet: SelectionSet): AnyObject => {
+export const AnyObject = (selectionSet: SelectionSet): FragmentOrSelection => {
   const unnamed = InlineSelection(selectionSet);
   return unnamed.intersections.length == 1 &&
     unnamed.fields.length == 0 &&

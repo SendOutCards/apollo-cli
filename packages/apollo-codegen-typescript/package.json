@@ -1,7 +1,7 @@
 {
   "name": "@sendoutcards/apollo-codegen-typescript",
   "description": "TypeScript generator module for Apollo Codegen",
-  "version": "0.27.14",
+  "version": "0.27.22",
   "main": "./lib/index.js",
   "scripts": {
     "clean": "rm -rf lib",
@@ -35,7 +35,7 @@
     "@babel/types": "7.1.6",
     "apollo-codegen-core": "^0.27.0",
     "change-case": "^3.0.1",
-    "immutable": "^3.8.2",
+    "immutable": "4.0.0-rc.12",
     "inflected": "^2.0.3",
     "lodash": "^4.17.10"
   },

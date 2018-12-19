@@ -4,7 +4,7 @@ query GetCollection($id: ID!) {
     description
     reasonToSend
     cards(limit: 10) {
-      ...MinimalSendableCardFragment
+      ...DetailedSendableCardFragment
     }
   }
 }

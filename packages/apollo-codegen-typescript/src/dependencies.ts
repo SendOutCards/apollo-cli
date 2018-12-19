@@ -4,7 +4,7 @@ import {
   InlineSelection,
   FragmentReference,
   OutputType,
-  AnyObject,
+  FragmentOrSelection,
   InputType,
   Typename
 } from "./intermediates";
@@ -111,7 +111,7 @@ const selectionFragmentStringDependencies = (
       : [])
   );
 
-const anyObjectDependencies = (object: AnyObject): Dependency[] =>
+const anyObjectDependencies = (object: FragmentOrSelection): Dependency[] =>
   object.kind == "InlineSelection"
     ? inlineSelectionDependencies(object)
     : [fragmentReferenceDependency(object)];

@@ -3,6 +3,7 @@ import minimalSendableCardFragmentRawString from "../MinimalSendableCardFragment
 export const minimalSendableCardFragmentString = minimalSendableCardFragmentRawString;
 
 export type MinimalSendableCardFragment = {
+  __typename: "SendableCard";
   id: string;
   title: string;
   variationColor: string;
@@ -19,6 +20,7 @@ export const isMinimalSendableCardFragment = (
   fragment: any
 ): fragment is MinimalSendableCardFragment =>
   fragment &&
+  fragment.__typename == "SendableCard" &&
   typeof fragment.id == "string" &&
   typeof fragment.title == "string" &&
   typeof fragment.variationColor == "string" &&

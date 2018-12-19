@@ -15,10 +15,5 @@
     "lib": true
   },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": [
-    "deduped",
-    "dependencies",
-    "of",
-    "type"
-  ]
+  "cSpell.words": ["deduped", "dependencies", "normalizable", "of", "type"]
 }

@@ -47,7 +47,7 @@ export const isSendableCardDetailsFragment = (
   fragment.variations
     .slice(0, 5)
     .reduce(
-      (accum, next) =>
+      (accum: any, next: any) =>
         accum &&
         next &&
         typeof next.id == "string" &&
@@ -68,7 +68,7 @@ export const isSendableCardDetailsFragment = (
   fragment.cost.total
     .slice(0, 5)
     .reduce(
-      (accum, next) =>
+      (accum: any, next: any) =>
         accum &&
         (next == null ||
           (next &&

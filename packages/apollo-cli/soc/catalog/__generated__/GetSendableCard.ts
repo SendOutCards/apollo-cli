@@ -1,27 +1,25 @@
 import { Maybe, Operation } from "../../__generated__/globalTypes";
 
 import {
-  MinimalSendableCardFragment,
-  minimalSendableCardFragmentString
-} from "./MinimalSendableCardFragment";
+  DetailedSendableCardFragment,
+  detailedSendableCardFragmentString
+} from "./DetailedSendableCardFragment";
 
-import {
-  SendableCardDetailsFragment,
-  sendableCardDetailsFragmentString
-} from "./SendableCardDetailsFragment";
+import { sendableCardDetailsFragmentString } from "./SendableCardDetailsFragment";
+
+import { minimalSendableCardFragmentString } from "./MinimalSendableCardFragment";
 
 import getSendableCardRawString from "../GetSendableCard.graphql";
 
 const getSendableCardString = [
   getSendableCardRawString,
-  minimalSendableCardFragmentString,
-  sendableCardDetailsFragmentString
+  detailedSendableCardFragmentString,
+  sendableCardDetailsFragmentString,
+  minimalSendableCardFragmentString
 ].join("\n\n");
 
 export type GetSendableCard = {
-  sendableCard: Maybe<
-    MinimalSendableCardFragment & SendableCardDetailsFragment
-  >;
+  sendableCard: Maybe<DetailedSendableCardFragment>;
 };
 
 export const GetSendableCard = (id: string): Operation<GetSendableCard> => ({

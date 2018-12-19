@@ -1,4 +1,4 @@
-import { Set } from 'immutable';
+import { Set } from "immutable";
 import {
   identifier,
   TSUnionType,
@@ -7,18 +7,19 @@ import {
   TSTypeParameterInstantiation,
   TSLiteralType,
   stringLiteral
-} from '@babel/types';
+} from "@babel/types";
 
 const GenericType = (name: string, ...types: TSType[]): TSType =>
   TSTypeReference(identifier(name), TSTypeParameterInstantiation(types) as any);
 
-export const MaybeType = (type: TSType): TSType => GenericType('Maybe', type);
+export const MaybeType = (type: TSType): TSType => GenericType("Maybe", type);
 
-export const PartialType = (type: TSType): TSType => GenericType('Partial', type);
+export const PartialType = (type: TSType): TSType =>
+  GenericType("Partial", type);
 
 export const IfType = (possibleTypes: Set<string>, type: TSType): TSType =>
   GenericType(
-    'If',
+    "If",
     TSUnionType(
       possibleTypes
         .sort()
@@ -28,6 +29,10 @@ export const IfType = (possibleTypes: Set<string>, type: TSType): TSType =>
     type
   );
 
-export const OptionalType = (type: TSType): TSType => GenericType('Optional', type);
+export const OptionalType = (type: TSType): TSType =>
+  GenericType("Optional", type);
 
-export const OperationType = (type: TSType): TSType => GenericType('Operation', type);
+export const OperationType = (type: TSType): TSType =>
+  GenericType("Operation", type);
+
+export const ByIdType = (type: TSType): TSType => GenericType("ById", type);

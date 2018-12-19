@@ -1,0 +1,7 @@
+fragment DetailedCardCategoryFragment on CardCategory {
+  id
+  description
+  cards(limit: 10) {
+    ...DetailedSendableCardFragment
+  }
+}

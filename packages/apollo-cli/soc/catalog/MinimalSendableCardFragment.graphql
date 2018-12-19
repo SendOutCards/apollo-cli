@@ -1,4 +1,5 @@
 fragment MinimalSendableCardFragment on SendableCard {
+  __typename
   id
   title
   variationColor
