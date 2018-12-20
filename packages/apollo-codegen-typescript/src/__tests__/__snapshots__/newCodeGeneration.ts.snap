@@ -55,6 +55,8 @@ export const Duplicate = (propA: EnumCommentTestCase, propB: EnumCommentTestCase
 });
 
 export type NormalizedData = {};
+
+export const NormalizedData = (): NormalizedData => ({});
 ",
 }
 `;
@@ -174,6 +176,11 @@ export type NormalizedData = {
   Human: ById<NormalizedHuman>;
   Droid: ById<NormalizedDroid>;
 };
+
+export const NormalizedData = (): NormalizedData => ({
+  Human: {},
+  Droid: {}
+});
 ",
 }
 `;
@@ -227,6 +234,8 @@ export type Operation<Data> = { query: string; variables?: any };
 export type ById<T> = { [id: string]: T | undefined }
 
 export type NormalizedData = {};
+
+export const NormalizedData = (): NormalizedData => ({});
 ",
 }
 `;
@@ -290,6 +299,8 @@ export enum Episode {
 }
 
 export type NormalizedData = {};
+
+export const NormalizedData = (): NormalizedData => ({});
 ",
 }
 `;
@@ -328,6 +339,8 @@ export type Operation<Data> = { query: string; variables?: any };
 export type ById<T> = { [id: string]: T | undefined }
 
 export type NormalizedData = {};
+
+export const NormalizedData = (): NormalizedData => ({});
 ",
 }
 `;
@@ -376,6 +389,8 @@ export enum Episode {
 }
 
 export type NormalizedData = {};
+
+export const NormalizedData = (): NormalizedData => ({});
 ",
 }
 `;
@@ -454,6 +469,11 @@ export type NormalizedData = {
   Human: ById<NormalizedHuman>;
   Droid: ById<NormalizedDroid>;
 };
+
+export const NormalizedData = (): NormalizedData => ({
+  Human: {},
+  Droid: {}
+});
 ",
 }
 `;
@@ -540,6 +560,11 @@ export type NormalizedData = {
   Human: ById<NormalizedHuman>;
   Droid: ById<NormalizedDroid>;
 };
+
+export const NormalizedData = (): NormalizedData => ({
+  Human: {},
+  Droid: {}
+});
 ",
 }
 `;
@@ -583,6 +608,8 @@ export enum EnumCommentTestCase {
 }
 
 export type NormalizedData = {};
+
+export const NormalizedData = (): NormalizedData => ({});
 ",
 }
 `;
@@ -626,6 +653,8 @@ export enum EnumCommentTestCase {
 }
 
 export type NormalizedData = {};
+
+export const NormalizedData = (): NormalizedData => ({});
 ",
 }
 `;
@@ -709,6 +738,11 @@ export type NormalizedData = {
   Human: ById<NormalizedHuman>;
   Droid: ById<NormalizedDroid>;
 };
+
+export const NormalizedData = (): NormalizedData => ({
+  Human: {},
+  Droid: {}
+});
 ",
 }
 `;
@@ -745,6 +779,8 @@ export type Operation<Data> = { query: string; variables?: any };
 export type ById<T> = { [id: string]: T | undefined }
 
 export type NormalizedData = {};
+
+export const NormalizedData = (): NormalizedData => ({});
 ",
 }
 `;
@@ -809,6 +845,11 @@ export type NormalizedData = {
   Human: ById<NormalizedHuman>;
   Droid: ById<NormalizedDroid>;
 };
+
+export const NormalizedData = (): NormalizedData => ({
+  Human: {},
+  Droid: {}
+});
 ",
 }
 `;
@@ -883,6 +924,8 @@ export const ColorInput = (red: number, green: number, blue: number): ColorInput
 });
 
 export type NormalizedData = {};
+
+export const NormalizedData = (): NormalizedData => ({});
 ",
 }
 `;

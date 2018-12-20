@@ -6,10 +6,6 @@ export type ById<T> = { [id: string]: T | undefined };
 
 export type NormalizedCollection = {
   backgroundImageUrl: Maybe<string>;
-  minimalCards?: {
-    __typename: "SendableCard";
-    id: string;
-  }[];
   cards?: {
     __typename: "SendableCard";
     id: string;
@@ -78,3 +74,9 @@ export type NormalizedData = {
   SendableCard: ById<NormalizedSendableCard>;
   CardCategory: ById<NormalizedCardCategory>;
 };
+
+export const NormalizedData = (): NormalizedData => ({
+  Collection: {},
+  SendableCard: {},
+  CardCategory: {}
+});

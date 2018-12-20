@@ -69,7 +69,7 @@ const objectPropertiesForOperation = (operation: Operation): ObjectProperty[] =>
       )
   );
 
-const constructorDeclaration = (
+export const constructorDeclaration = (
   name: string,
   parameters: LVal[],
   returnType: TSType,

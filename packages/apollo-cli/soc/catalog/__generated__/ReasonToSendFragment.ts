@@ -1,9 +1,9 @@
 import { CollectionFragment, isCollectionFragment } from "./CollectionFragment";
 
 import {
-  MinimalSendableCardFragment,
-  isMinimalSendableCardFragment
-} from "./MinimalSendableCardFragment";
+  DetailedSendableCardFragment,
+  isDetailedSendableCardFragment
+} from "./DetailedSendableCardFragment";
 
 import reasonToSendFragmentRawString from "../ReasonToSendFragment.graphql";
 
@@ -11,7 +11,7 @@ export const reasonToSendFragmentString = reasonToSendFragmentRawString;
 
 export type ReasonToSendFragment = CollectionFragment & {
   description: string;
-  minimalCards: MinimalSendableCardFragment[];
+  cards: DetailedSendableCardFragment[];
 };
 
 export const isReasonToSendFragment = (
@@ -19,11 +19,11 @@ export const isReasonToSendFragment = (
 ): fragment is ReasonToSendFragment =>
   (isCollectionFragment(fragment) as boolean) &&
   typeof fragment.description == "string" &&
-  Array.isArray(fragment.minimalCards) &&
-  fragment.minimalCards
+  Array.isArray(fragment.cards) &&
+  fragment.cards
     .slice(0, 5)
     .reduce(
       (accum: any, next: any) =>
-        accum && (isMinimalSendableCardFragment(next) as boolean),
+        accum && (isDetailedSendableCardFragment(next) as boolean),
       true
     );

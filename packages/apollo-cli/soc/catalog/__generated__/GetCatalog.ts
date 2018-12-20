@@ -22,6 +22,10 @@ import {
   cardCategoryFragmentString
 } from "./CardCategoryFragment";
 
+import { detailedSendableCardFragmentString } from "./DetailedSendableCardFragment";
+
+import { sendableCardDetailsFragmentString } from "./SendableCardDetailsFragment";
+
 import getCatalogRawString from "../GetCatalog.graphql";
 
 const getCatalogString = [
@@ -30,7 +34,9 @@ const getCatalogString = [
   minimalSendableCardFragmentString,
   collectionFragmentString,
   myCardFragmentString,
-  cardCategoryFragmentString
+  cardCategoryFragmentString,
+  detailedSendableCardFragmentString,
+  sendableCardDetailsFragmentString
 ].join("\n\n");
 
 export type GetCatalog = {

@@ -2,6 +2,6 @@ fragment ReasonToSendFragment on Collection {
   ...CollectionFragment
   description
   cards(limit: 1) {
-    ...MinimalSendableCardFragment
+    ...DetailedSendableCardFragment
   }
 }

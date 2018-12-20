@@ -8,7 +8,9 @@ import {
   TSTypeLiteral,
   TSType,
   TSArrayType,
-  TSUnionType
+  TSUnionType,
+  objectProperty,
+  objectExpression
 } from "@babel/types";
 import {
   ExtendedFields,
@@ -18,6 +20,7 @@ import {
 } from "./extendedIntermediates";
 import { MaybeType, ByIdType } from "./genericTypes";
 import { typeReference, typeForScalar, typeForTypename } from "./types";
+import { constructorDeclaration } from "./constructors";
 
 const typeForExtendedFields = (fields: ExtendedFields): TSType =>
   TSTypeLiteral([...fields.map(propertySignatureForExtendedField).values()]);
@@ -82,6 +85,17 @@ export const normalizedDataDeclarations = (context: CompilerContext) => {
           )
           .toArray()
       )
+    ),
+    constructorDeclaration(
+      "NormalizedData",
+      [],
+      typeReference("NormalizedData"),
+      types
+        .keySeq()
+        .map(__typename =>
+          objectProperty(identifier(__typename), objectExpression([]))
+        )
+        .toArray()
     )
   ];
 };
