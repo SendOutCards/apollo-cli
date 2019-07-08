@@ -21,6 +21,7 @@ class TypescriptGeneratedFile implements BasicGeneratedFile {
   constructor(fileContents: string) {
     this.fileContents = fileContents;
   }
+
   get output() {
     return this.fileContents;
   }
@@ -54,8 +55,7 @@ export function generateLocalSource(
             context
           ).forEach(printable => printer.enqueue(printable));
         }
-        const result = printer.print();
-        return new TypescriptGeneratedFile(result);
+        return new TypescriptGeneratedFile(printer.print());
       }
     }))
     .concat(
@@ -72,8 +72,7 @@ export function generateLocalSource(
               context
             ).forEach(printable => printer.enqueue(printable));
           }
-          const result = printer.print();
-          return new TypescriptGeneratedFile(result);
+          return new TypescriptGeneratedFile(printer.print());
         }
       }))
     );
@@ -107,6 +106,5 @@ export function generateGlobalSource(
   normalizedDataDeclarations(context).forEach(declaration => {
     printer.enqueue(exportDeclaration(declaration));
   });
-  const result = printer.print();
-  return new TypescriptGeneratedFile(result);
+  return new TypescriptGeneratedFile(printer.print());
 }

@@ -14,8 +14,12 @@ export const operationFile = (
   outputPath: string,
   globalSourcePath: string,
   context: CompilerContext
-): Printable[] =>
-  ((dependencies: Dependencies) => [
+): Printable[] => {
+  const dependencies = Dependencies(
+    operation.selectionSet,
+    operation.variables
+  );
+  return [
     ...dependencyImports(dependencies, outputPath, globalSourcePath, context),
     ...stringDeclarations(
       operation.operationName,
@@ -25,4 +29,5 @@ export const operationFile = (
     ),
     exportDeclaration(typeAliasDeclarationForOperation(operation)),
     exportDeclaration(constructorDeclarationForOperation(operation))
-  ])(Dependencies(operation.selectionSet, operation.variables));
+  ];
+};

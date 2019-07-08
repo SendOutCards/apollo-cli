@@ -13,16 +13,20 @@ export const fragmentFile = (
   outputPath: string,
   globalSourcePath: string,
   context: CompilerContext
-): Printable[] =>
-  ((dependencies: Dependencies) => [
-    ...dependencyImports(dependencies, outputPath, globalSourcePath, context),
-    ...stringDeclarations(
-      fragment.fragmentName,
-      fragment.filePath,
-      outputPath,
-      [],
-      true
-    ),
-    exportDeclaration(typeAliasDeclarationForFragment(fragment)),
-    exportDeclaration(isFragmentDeclaration(fragment))
-  ])(Dependencies(fragment.selectionSet));
+): Printable[] => [
+  ...dependencyImports(
+    Dependencies(fragment.selectionSet),
+    outputPath,
+    globalSourcePath,
+    context
+  ),
+  ...stringDeclarations(
+    fragment.fragmentName,
+    fragment.filePath,
+    outputPath,
+    [],
+    true
+  ),
+  exportDeclaration(typeAliasDeclarationForFragment(fragment)),
+  exportDeclaration(isFragmentDeclaration(fragment))
+];
