@@ -1,7 +1,7 @@
 {
   "name": "@sendoutcards/apollo-codegen-typescript",
   "description": "TypeScript generator module for Apollo Codegen",
-  "version": "0.27.24",
+  "version": "0.27.25",
   "main": "./lib/index.js",
   "scripts": {
     "clean": "rm -rf lib",
