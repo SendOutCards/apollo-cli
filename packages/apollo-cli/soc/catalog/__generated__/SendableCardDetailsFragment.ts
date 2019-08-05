@@ -11,7 +11,7 @@ export type SendableCardDetailsFragment = {
     smallThumb: string;
   }>;
   variationColor: string;
-  variations: ({
+  variations: {
     id: string;
     frontImage: {
       id: string;
@@ -24,12 +24,12 @@ export type SendableCardDetailsFragment = {
       smallThumb: string;
     }>;
     variationColor: string;
-  })[];
+  }[];
   cost: {
-    total: ({
+    total: {
       asString: string;
       amount: number;
-    })[];
+    }[];
   };
 };
 

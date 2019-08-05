@@ -40,14 +40,14 @@ const getCatalogString = [
 ].join("\n\n");
 
 export type GetCatalog = {
-  firstReasonToSend: (ReasonToSendFragment)[];
-  reasonsToSend: (ReasonToSendFragment)[];
-  favoritedCards: (MinimalSendableCardFragment)[];
-  featuredCards: (MinimalSendableCardFragment)[];
-  collections: (CollectionFragment)[];
-  myCards: (MyCardFragment)[];
-  legacyPicturePlusCards: (MinimalSendableCardFragment)[];
-  cardCategories: (CardCategoryFragment)[];
+  firstReasonToSend: ReasonToSendFragment[];
+  reasonsToSend: ReasonToSendFragment[];
+  favoritedCards: MinimalSendableCardFragment[];
+  featuredCards: MinimalSendableCardFragment[];
+  collections: CollectionFragment[];
+  myCards: MyCardFragment[];
+  legacyPicturePlusCards: MinimalSendableCardFragment[];
+  cardCategories: CardCategoryFragment[];
 };
 
 export const GetCatalog = (): Operation<GetCatalog> => ({

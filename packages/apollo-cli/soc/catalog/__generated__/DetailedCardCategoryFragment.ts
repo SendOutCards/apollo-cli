@@ -10,7 +10,7 @@ export const detailedCardCategoryFragmentString = detailedCardCategoryFragmentRa
 export type DetailedCardCategoryFragment = {
   id: string;
   description: string;
-  cards: (DetailedSendableCardFragment)[];
+  cards: DetailedSendableCardFragment[];
 };
 
 export const isDetailedCardCategoryFragment = (

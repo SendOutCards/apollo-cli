@@ -92,7 +92,8 @@ export const typeForTypename = (typename: Typename): TSType =>
   );
 
 const parenthesizedTypeIfNecessary = (type: TSType): TSType =>
-  isTSIntersectionType(type) || isTSUnionType(type)
+  (isTSIntersectionType(type) && type.types.length > 1) ||
+  (isTSUnionType(type) && type.types.length > 1)
     ? TSParenthesizedType(type)
     : type;
 

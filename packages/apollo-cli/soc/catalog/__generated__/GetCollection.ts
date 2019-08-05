@@ -29,7 +29,7 @@ export type GetCollection = {
     CollectionFragment & {
       description: string;
       reasonToSend: boolean;
-      cards: (DetailedSendableCardFragment)[];
+      cards: DetailedSendableCardFragment[];
     }
   >;
 };

@@ -11,7 +11,7 @@ export const reasonToSendFragmentString = reasonToSendFragmentRawString;
 
 export type ReasonToSendFragment = CollectionFragment & {
   description: string;
-  cards: (DetailedSendableCardFragment)[];
+  cards: DetailedSendableCardFragment[];
 };
 
 export const isReasonToSendFragment = (
