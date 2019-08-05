@@ -39,10 +39,10 @@ export type NormalizedSendableCard = {
   isFavorite: boolean;
   isPremium: boolean;
   cost?: {
-    total: Maybe<{
+    total: {
       asString: string;
       amount: number;
-    }>[];
+    }[];
   };
   isHorizontal: boolean;
   variationColor: string;

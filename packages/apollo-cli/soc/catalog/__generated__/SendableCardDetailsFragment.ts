@@ -11,7 +11,7 @@ export type SendableCardDetailsFragment = {
     smallThumb: string;
   }>;
   variationColor: string;
-  variations: {
+  variations: ({
     id: string;
     frontImage: {
       id: string;
@@ -24,12 +24,12 @@ export type SendableCardDetailsFragment = {
       smallThumb: string;
     }>;
     variationColor: string;
-  }[];
+  })[];
   cost: {
-    total: Maybe<{
+    total: ({
       asString: string;
       amount: number;
-    }>[];
+    })[];
   };
 };
 
@@ -70,9 +70,8 @@ export const isSendableCardDetailsFragment = (
     .reduce(
       (accum: any, next: any) =>
         accum &&
-        (next == null ||
-          (next &&
-            typeof next.asString == "string" &&
-            typeof next.amount == "number")),
+        next &&
+        typeof next.asString == "string" &&
+        typeof next.amount == "number",
       true
     );

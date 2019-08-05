@@ -1,4 +1,4 @@
-import { Operation } from "../../../__generated__/globalTypes";
+import { Maybe, Operation } from "../../../__generated__/globalTypes";
 
 import {
   AccountFragment,
@@ -16,7 +16,7 @@ const loadAccountString = [
 ].join("\n\n");
 
 export type LoadAccount = {
-  account: AccountFragment;
+  account: Maybe<AccountFragment>;
 };
 
 export const LoadAccount = (): Operation<LoadAccount> => ({

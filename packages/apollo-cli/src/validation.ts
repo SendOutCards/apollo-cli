@@ -53,6 +53,7 @@ export function validateQueryDocument(
   const validationErrors = getValidationErrors(schema, document);
   if (validationErrors && validationErrors.length > 0) {
     for (const error of validationErrors) {
+      console.log(error);
       logError(error);
     }
     throw new ToolError("Validation of GraphQL query document failed");

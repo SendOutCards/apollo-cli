@@ -11,7 +11,7 @@ export type CardCategoryFragment = {
   __typename: "CardCategory";
   id: string;
   description: string;
-  cards: MinimalSendableCardFragment[];
+  cards: (MinimalSendableCardFragment)[];
 };
 
 export const isCardCategoryFragment = (

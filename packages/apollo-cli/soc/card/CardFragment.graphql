@@ -1,0 +1,16 @@
+fragment CardFragment on Card {
+  __typename
+  id
+  sendableCard {
+    ...SendableCardFragment
+    cardTemplate {
+      backPanelLocation
+    }
+    variations {
+      ...SendableCardFragment
+      cardTemplate {
+        backPanelLocation
+      }
+    }
+  }
+}

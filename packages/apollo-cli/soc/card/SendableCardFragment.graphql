@@ -1,0 +1,3 @@
+fragment SendableCardFragment on SendableCard {
+  id
+}

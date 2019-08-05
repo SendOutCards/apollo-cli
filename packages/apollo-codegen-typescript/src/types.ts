@@ -37,7 +37,8 @@ import {
   Declaration,
   exportNamedDeclaration,
   Identifier,
-  TSLiteralType
+  TSLiteralType,
+  isTSIntersectionType
 } from "@babel/types";
 
 import {
@@ -51,6 +52,7 @@ import {
   Typename
 } from "./intermediates";
 import { OptionalType, MaybeType, IfType, PartialType } from "./genericTypes";
+import { isTSUnionType } from "@babel/types";
 
 export const typeReference = (name: string): TSTypeReference =>
   TSTypeReference(identifier(name));
@@ -89,12 +91,19 @@ export const typeForTypename = (typename: Typename): TSType =>
       .map(type => TSLiteralType(stringLiteral(type)))
   );
 
+const parenthesizedTypeIfNecessary = (type: TSType): TSType =>
+  isTSIntersectionType(type) || isTSUnionType(type)
+    ? TSParenthesizedType(type)
+    : type;
+
 const typeForOutputType = (type: OutputType | Typename): TSType => {
   switch (type.kind) {
     case "Maybe":
       return MaybeType(typeForOutputType(type.ofType));
     case "List":
-      return TSArrayType(typeForOutputType(type.ofType));
+      return TSArrayType(
+        parenthesizedTypeIfNecessary(typeForOutputType(type.ofType))
+      );
     case "FragmentReference":
       return typeReference(type.name);
     case "InlineSelection":
