@@ -67,15 +67,12 @@ const exactValueForGraphQLInputType = (
       : logicalExpression(
           "&&",
           fieldIdentifier,
-          memberExpression(
-            fieldIdentifier,
-            callExpression(identifier("map"), [
-              arrowFunctionExpression(
-                [identifier("x")],
-                exactValueForGraphQLInputType(type.ofType, identifier("x"))
-              )
-            ])
-          )
+          callExpression(memberExpression(fieldIdentifier, identifier("map")), [
+            arrowFunctionExpression(
+              [identifier("x")],
+              exactValueForGraphQLInputType(type.ofType, identifier("x"))
+            )
+          ])
         );
   } else {
     return fieldIdentifier;
