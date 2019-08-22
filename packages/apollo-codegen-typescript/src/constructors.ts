@@ -3,7 +3,11 @@ import {
   GraphQLType,
   GraphQLInputType,
   GraphQLInputObjectType,
-  GraphQLInputField
+  GraphQLInputField,
+  isInputObjectType,
+  isNonNullType,
+  isListType,
+  isInputType
 } from "graphql";
 
 import {
@@ -19,19 +23,72 @@ import {
   Identifier,
   objectProperty,
   ArrowFunctionExpression,
-  ObjectProperty
+  ObjectProperty,
+  Expression,
+  isIdentifier
 } from "@babel/types";
 
 import { typeForInputType, typeReference, stringIdentifier } from "./types";
 import { InputType } from "./intermediates";
 import { OperationType } from "./genericTypes";
 import compact from "./compact";
+import generate from "babel-generator";
+import { callExpression } from "@babel/types";
+import { logicalExpression } from "@babel/types";
+import { isLogicalExpression } from "@babel/types";
+import { memberExpression } from "@babel/types";
 
 const objectPropertyForGraphQLInputField = (field: GraphQLInputField) =>
   objectProperty(identifier(field.name), identifier(field.name), false, true);
 
-const identifierForGraphQLInputField = (field: GraphQLInputField): Identifier =>
-  typedIdentifier(field.name, typeForInputType(InputType(field.type)));
+const exactValueForGraphQLInputType = (
+  type: GraphQLInputType,
+  fieldIdentifier: Identifier
+): Expression => {
+  if (isInputObjectType(type)) {
+    return logicalExpression(
+      "&&",
+      fieldIdentifier,
+      callExpression(identifier(type.name), [fieldIdentifier])
+    );
+  } else if (isNonNullType(type)) {
+    const expression = exactValueForGraphQLInputType(
+      type.ofType,
+      fieldIdentifier
+    );
+    return isLogicalExpression(expression) ? expression.right : expression;
+  } else if (isListType(type)) {
+    const expression = exactValueForGraphQLInputType(
+      type.ofType,
+      fieldIdentifier
+    );
+    return isIdentifier(expression) && expression.name == fieldIdentifier.name
+      ? expression
+      : logicalExpression(
+          "&&",
+          fieldIdentifier,
+          memberExpression(
+            fieldIdentifier,
+            callExpression(identifier("map"), [
+              arrowFunctionExpression(
+                [identifier("x")],
+                exactValueForGraphQLInputType(type.ofType, identifier("x"))
+              )
+            ])
+          )
+        );
+  } else {
+    return fieldIdentifier;
+  }
+};
+
+const exactPropertyForGraphQLInputField = (field: GraphQLInputField) =>
+  objectProperty(
+    identifier(field.name),
+    exactValueForGraphQLInputType(field.type, identifier(field.name)),
+    false,
+    true
+  );
 
 export const typedIdentifier = (name: string, type: TSType): Identifier => ({
   ...identifier(name),
@@ -60,7 +117,12 @@ const objectPropertiesForOperation = (operation: Operation): ObjectProperty[] =>
           operation.variables.map(variable =>
             objectProperty(
               identifier(variable.name),
-              identifier(variable.name),
+              isInputType(variable.type)
+                ? exactValueForGraphQLInputType(
+                    variable.type,
+                    identifier(variable.name)
+                  )
+                : identifier(variable.name),
               false,
               true
             )
@@ -91,9 +153,18 @@ export const constructorDeclarationForGraphQLInputObjectType = (
   ((fields: GraphQLInputField[]) =>
     constructorDeclaration(
       type.name,
-      fields.map(identifierForGraphQLInputField),
+      [
+        {
+          ...identifier(
+            generate(
+              objectExpression(fields.map(objectPropertyForGraphQLInputField))
+            ).code
+          ),
+          typeAnnotation: TSTypeAnnotation(typeReference(type.name)) as any
+        }
+      ],
       typeReference(type.name),
-      fields.map(objectPropertyForGraphQLInputField)
+      fields.map(exactPropertyForGraphQLInputField)
     ))(Object.values(type.getFields()));
 
 export const constructorDeclarationForOperation = (operation: Operation) =>
