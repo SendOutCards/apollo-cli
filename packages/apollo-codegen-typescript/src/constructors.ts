@@ -32,7 +32,7 @@ import { typeForInputType, typeReference, stringIdentifier } from "./types";
 import { InputType } from "./intermediates";
 import { OperationType } from "./genericTypes";
 import compact from "./compact";
-import generate from "babel-generator";
+import generate from "@babel/generator";
 import { callExpression } from "@babel/types";
 import { logicalExpression } from "@babel/types";
 import { isLogicalExpression } from "@babel/types";
