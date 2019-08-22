@@ -4,6 +4,118 @@ export type If<T, V> = { __typename: T } & V;
 export type Operation<Data> = { query: string; variables?: any };
 export type ById<T> = { [id: string]: T | undefined };
 
+export type CreateCampaignInput = {
+  id?: Maybe<string>;
+  name: string;
+  order?: Maybe<string>;
+  lines?: Maybe<LineInput[]>;
+  returnAddress?: Maybe<AddressInput>;
+};
+
+export const CreateCampaignInput = ({
+  id,
+  name,
+  order,
+  lines,
+  returnAddress
+}: CreateCampaignInput): CreateCampaignInput => ({
+  id,
+  name,
+  order,
+  lines: lines && lines.map(x => LineInput(x)),
+  returnAddress: returnAddress && AddressInput(returnAddress)
+});
+
+export type LineInput = {
+  card?: Maybe<string>;
+  giftVariation?: Maybe<string>;
+  sendDelay?: Maybe<SendDelayInput>;
+};
+
+export const LineInput = ({
+  card,
+  giftVariation,
+  sendDelay
+}: LineInput): LineInput => ({
+  card,
+  giftVariation,
+  sendDelay: sendDelay && SendDelayInput(sendDelay)
+});
+
+export type SendDelayInput = {
+  type?: Maybe<SendDelayType>;
+  delayNumber?: Maybe<number>;
+  delayType?: Maybe<SendDelayDelayType>;
+  timeType?: Maybe<SendDelayTimeType>;
+  specificDate?: Maybe<string>;
+};
+
+export const SendDelayInput = ({
+  type,
+  delayNumber,
+  delayType,
+  timeType,
+  specificDate
+}: SendDelayInput): SendDelayInput => ({
+  type,
+  delayNumber,
+  delayType,
+  timeType,
+  specificDate
+});
+
+export enum SendDelayType {
+  IMM = "IMM",
+  BIR = "BIR",
+  ANN = "ANN",
+  SPE = "SPE"
+}
+
+export enum SendDelayDelayType {
+  DAY = "DAY",
+  WEE = "WEE",
+  MON = "MON"
+}
+
+export enum SendDelayTimeType {
+  BEF = "BEF",
+  AFT = "AFT"
+}
+
+export type AddressInput = {
+  firstName: string;
+  lastName: string;
+  company: string;
+  address1: string;
+  address2: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+};
+
+export const AddressInput = ({
+  firstName,
+  lastName,
+  company,
+  address1,
+  address2,
+  city,
+  state,
+  postalCode,
+  country
+}: AddressInput): AddressInput => ({
+  firstName,
+  lastName,
+  company,
+  address1,
+  address2,
+  city,
+  state,
+  postalCode,
+  country
+});
+
 export type CreateContactInput = {
   firstName?: Maybe<string>;
   lastName?: Maybe<string>;
