@@ -1,7 +1,7 @@
 {
   "name": "@sendoutcards/apollo",
   "description": "CLI for apollographql",
-  "version": "1.7.17",
+  "version": "1.7.19",
   "author": "opensource@apollographql.com",
   "bin": {
     "apollo": "./bin/run"
