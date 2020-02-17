@@ -24,7 +24,7 @@ const getCollectionString = [
   minimalSendableCardFragmentString
 ].join("\n\n");
 
-export type GetCollection = {
+export type GetCollectionData = {
   collection: Maybe<
     CollectionFragment & {
       description: string;
@@ -34,7 +34,18 @@ export type GetCollection = {
   >;
 };
 
-export const GetCollection = (id: string): Operation<GetCollection> => ({
+export type GetCollectionVariables = {
+  id: string;
+};
+
+export type GetCollection = Operation<
+  GetCollectionData,
+  GetCollectionVariables
+>;
+
+export const GetCollection = ({
+  id
+}: GetCollectionVariables): GetCollection => ({
   query: getCollectionString,
   variables: {
     id

@@ -15,10 +15,13 @@ const loadAccountString = [
   addressFragmentString
 ].join("\n\n");
 
-export type LoadAccount = {
+export type LoadAccountData = {
   account: Maybe<AccountFragment>;
 };
 
-export const LoadAccount = (): Operation<LoadAccount> => ({
-  query: loadAccountString
+export type LoadAccount = Operation<LoadAccountData>;
+
+export const LoadAccount = (): LoadAccount => ({
+  query: loadAccountString,
+  variables: undefined
 });

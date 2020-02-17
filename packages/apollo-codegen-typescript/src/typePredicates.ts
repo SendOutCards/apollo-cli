@@ -68,7 +68,7 @@ const or = (...expressions: Expression[]) =>
   logicallyCombine("||", expressions);
 
 const nullPredicate = (expression: Expression) =>
-  binaryExpression("==", expression, nullLiteral());
+  binaryExpression("===", expression, nullLiteral());
 
 const scalarType = (scalar: Scalar): string => {
   switch (scalar.name) {
@@ -139,12 +139,12 @@ const typePredicate = (
     case "Enum":
       return or(
         ...type.values.map(value =>
-          binaryExpression("==", expression, stringLiteral(value))
+          binaryExpression("===", expression, stringLiteral(value))
         )
       );
     case "Scalar":
       return binaryExpression(
-        "==",
+        "===",
         unaryExpression("typeof", expression),
         stringLiteral(scalarType(type))
       );
@@ -152,14 +152,14 @@ const typePredicate = (
       return or(
         ...type.possibleTypes
           .toArray()
-          .map(type => binaryExpression("==", expression, stringLiteral(type)))
+          .map(type => binaryExpression("===", expression, stringLiteral(type)))
       );
   }
 };
 
 const typenamePredicate = (object: Expression, type: string) =>
   binaryExpression(
-    "==",
+    "===",
     memberExpression(object, identifier("__typename")),
     stringLiteral(type)
   );

@@ -6,7 +6,7 @@ import {
 
 import createContactString from "../CreateContact.graphql";
 
-export type CreateContact = {
+export type CreateContactData = {
   createContact: Maybe<{
     contact: {
       id: string;
@@ -14,9 +14,18 @@ export type CreateContact = {
   }>;
 };
 
-export const CreateContact = (
-  contact: CreateContactInput
-): Operation<CreateContact> => ({
+export type CreateContactVariables = {
+  contact: CreateContactInput;
+};
+
+export type CreateContact = Operation<
+  CreateContactData,
+  CreateContactVariables
+>;
+
+export const CreateContact = ({
+  contact
+}: CreateContactVariables): CreateContact => ({
   query: createContactString,
   variables: {
     contact: CreateContactInput(contact)

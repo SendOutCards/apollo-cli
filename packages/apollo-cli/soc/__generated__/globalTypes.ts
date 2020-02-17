@@ -1,7 +1,9 @@
 export type Maybe<T> = T | null;
-export type Optional<T> = Maybe<T> | undefined;
 export type If<T, V> = { __typename: T } & V;
-export type Operation<Data> = { query: string; variables?: any };
+export type Operation<Data, Variables = undefined> = {
+  query: string;
+  variables: Variables;
+};
 export type ById<T> = { [id: string]: T | undefined };
 
 export type CreateCampaignInput = {
@@ -36,7 +38,7 @@ export const LineInput = ({
   card,
   giftVariation,
   sendDelay
-}: LineInput): LineInput => ({
+}: LineInput = {}): LineInput => ({
   card,
   giftVariation,
   sendDelay: sendDelay && SendDelayInput(sendDelay)
@@ -56,7 +58,7 @@ export const SendDelayInput = ({
   delayType,
   timeType,
   specificDate
-}: SendDelayInput): SendDelayInput => ({
+}: SendDelayInput = {}): SendDelayInput => ({
   type,
   delayNumber,
   delayType,
@@ -168,7 +170,7 @@ export const CreateContactInput = ({
   id,
   spouseName,
   spouseBirthday
-}: CreateContactInput): CreateContactInput => ({
+}: CreateContactInput = {}): CreateContactInput => ({
   firstName,
   lastName,
   companyName,

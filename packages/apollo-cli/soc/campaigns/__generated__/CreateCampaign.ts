@@ -6,7 +6,7 @@ import {
 
 import createCampaignString from "../CreateCampaign.graphql";
 
-export type CreateCampaign = {
+export type CreateCampaignData = {
   createCampaign: Maybe<{
     campaign: {
       id: string;
@@ -14,9 +14,18 @@ export type CreateCampaign = {
   }>;
 };
 
-export const CreateCampaign = (
-  campaign: CreateCampaignInput
-): Operation<CreateCampaign> => ({
+export type CreateCampaignVariables = {
+  campaign: CreateCampaignInput;
+};
+
+export type CreateCampaign = Operation<
+  CreateCampaignData,
+  CreateCampaignVariables
+>;
+
+export const CreateCampaign = ({
+  campaign
+}: CreateCampaignVariables): CreateCampaign => ({
   query: createCampaignString,
   variables: {
     campaign: CreateCampaignInput(campaign)

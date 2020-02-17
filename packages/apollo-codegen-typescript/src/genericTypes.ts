@@ -9,8 +9,13 @@ import {
   stringLiteral
 } from "@babel/types";
 
-const GenericType = (name: string, ...types: TSType[]): TSType =>
-  TSTypeReference(identifier(name), TSTypeParameterInstantiation(types) as any);
+const isNotUndefined = <T>(value: T | undefined): value is T =>
+  value != undefined;
+
+const GenericType = (name: string, ...types: (TSType | undefined)[]): TSType =>
+  TSTypeReference(identifier(name), TSTypeParameterInstantiation(
+    types.filter(isNotUndefined)
+  ) as any);
 
 export const MaybeType = (type: TSType): TSType => GenericType("Maybe", type);
 
@@ -29,10 +34,9 @@ export const IfType = (possibleTypes: Set<string>, type: TSType): TSType =>
     type
   );
 
-export const OptionalType = (type: TSType): TSType =>
-  GenericType("Optional", type);
-
-export const OperationType = (type: TSType): TSType =>
-  GenericType("Operation", type);
+export const OperationType = (
+  dataType: TSType,
+  variablesType: TSType | undefined
+): TSType => GenericType("Operation", dataType, variablesType);
 
 export const ByIdType = (type: TSType): TSType => GenericType("ById", type);

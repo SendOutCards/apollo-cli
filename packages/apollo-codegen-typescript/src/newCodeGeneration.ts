@@ -78,10 +78,9 @@ export function generateLocalSource(
     );
 }
 
-const globalTypes = `export type Maybe<T> = T | null;
-export type Optional<T> = Maybe<T> | undefined;
-export type If<T, V> = { __typename: T } & V;
-export type Operation<Data> = { query: string; variables?: any };
+const globalTypes = `export type Maybe<T> = T | null
+export type If<T, V> = { __typename: T } & V
+export type Operation<Data, Variables = undefined> = { query: string; variables: Variables }
 export type ById<T> = { [id: string]: T | undefined }`;
 
 export function generateGlobalSource(

@@ -60,10 +60,7 @@ const outputTypeDependencies = (type: OutputType | Typename): Dependency[] => {
 const inputTypeDependencies = (type: InputType): Dependency[] => {
   switch (type.kind) {
     case "Maybe":
-      return [
-        globalDependency("Optional"),
-        ...inputTypeDependencies(type.ofType)
-      ];
+      return [globalDependency("Maybe"), ...inputTypeDependencies(type.ofType)];
     case "List":
       return inputTypeDependencies(type.ofType);
     case "InputObject":

@@ -1,6 +1,5 @@
 import { Operation } from "apollo-codegen-core/lib/compiler";
 import {
-  GraphQLType,
   GraphQLInputType,
   GraphQLInputObjectType,
   GraphQLInputField,
@@ -28,18 +27,17 @@ import {
   isIdentifier
 } from "@babel/types";
 
-import { typeForInputType, typeReference, stringIdentifier } from "./types";
-import { InputType } from "./intermediates";
-import { OperationType } from "./genericTypes";
+import { typeReference, stringIdentifier } from "./types";
 import compact from "./compact";
 import generate from "@babel/generator";
 import { callExpression } from "@babel/types";
 import { logicalExpression } from "@babel/types";
 import { isLogicalExpression } from "@babel/types";
 import { memberExpression } from "@babel/types";
+import { assignmentPattern } from "@babel/types";
 
-const objectPropertyForGraphQLInputField = (field: GraphQLInputField) =>
-  objectProperty(identifier(field.name), identifier(field.name), false, true);
+const shorthandObjectProperty = (name: string) =>
+  objectProperty(identifier(name), identifier(name), false, true);
 
 const exactValueForGraphQLInputType = (
   type: GraphQLInputType,
@@ -92,25 +90,17 @@ export const typedIdentifier = (name: string, type: TSType): Identifier => ({
   typeAnnotation: TSTypeAnnotation(type) as any
 });
 
-const identifierForVariable = (variable: {
-  name: string;
-  type: GraphQLType;
-}): Identifier =>
-  typedIdentifier(
-    variable.name,
-    typeForInputType(InputType(variable.type as GraphQLInputType))
-  );
-
-const objectPropertiesForOperation = (operation: Operation): ObjectProperty[] =>
-  compact(
-    objectProperty(
-      identifier("query"),
-      stringIdentifier(operation.operationName)
-    ),
-    operation.variables.length > 0 &&
-      objectProperty(
-        identifier("variables"),
-        objectExpression(
+const objectPropertiesForOperation = (
+  operation: Operation
+): ObjectProperty[] => [
+  objectProperty(
+    identifier("query"),
+    stringIdentifier(operation.operationName)
+  ),
+  objectProperty(
+    identifier("variables"),
+    operation.variables.length > 0
+      ? objectExpression(
           operation.variables.map(variable =>
             objectProperty(
               identifier(variable.name),
@@ -125,8 +115,9 @@ const objectPropertiesForOperation = (operation: Operation): ObjectProperty[] =>
             )
           )
         )
-      )
-  );
+      : identifier("undefined")
+  )
+];
 
 export const constructorDeclaration = (
   name: string,
@@ -144,30 +135,52 @@ export const constructorDeclaration = (
     } as ArrowFunctionExpression)
   ]);
 
+const destructuredParameter = (
+  objectProperties: string[],
+  typeName: string,
+  defaultToEmptyObject: boolean
+) => {
+  const annotatedIdentifier = {
+    ...identifier(
+      generate(objectExpression(objectProperties.map(shorthandObjectProperty)))
+        .code
+    ),
+    typeAnnotation: TSTypeAnnotation(typeReference(typeName)) as any
+  };
+  return defaultToEmptyObject
+    ? assignmentPattern(annotatedIdentifier, objectExpression([]))
+    : annotatedIdentifier;
+};
+
 export const constructorDeclarationForGraphQLInputObjectType = (
   type: GraphQLInputObjectType
-) =>
-  ((fields: GraphQLInputField[]) =>
-    constructorDeclaration(
-      type.name,
-      [
-        {
-          ...identifier(
-            generate(
-              objectExpression(fields.map(objectPropertyForGraphQLInputField))
-            ).code
-          ),
-          typeAnnotation: TSTypeAnnotation(typeReference(type.name)) as any
-        }
-      ],
-      typeReference(type.name),
-      fields.map(exactPropertyForGraphQLInputField)
-    ))(Object.values(type.getFields()));
+) => {
+  const fields = Object.values(type.getFields());
+  return constructorDeclaration(
+    type.name,
+    [
+      destructuredParameter(
+        fields.map(field => field.name),
+        type.name,
+        !fields.some(field => isNonNullType(field.type))
+      )
+    ],
+    typeReference(type.name),
+    fields.map(exactPropertyForGraphQLInputField)
+  );
+};
 
 export const constructorDeclarationForOperation = (operation: Operation) =>
   constructorDeclaration(
     operation.operationName,
-    operation.variables.map(identifierForVariable),
-    OperationType(typeReference(operation.operationName)),
+    compact(
+      operation.variables.length > 0 &&
+        destructuredParameter(
+          operation.variables.map(variable => variable.name),
+          operation.operationName + "Variables",
+          !operation.variables.some(variable => isNonNullType(variable.type))
+        )
+    ),
+    typeReference(operation.operationName),
     objectPropertiesForOperation(operation)
   );

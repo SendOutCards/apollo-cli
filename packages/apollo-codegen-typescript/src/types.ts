@@ -13,7 +13,9 @@ import {
   GraphQLInputObjectType,
   GraphQLEnumValue,
   GraphQLInputFieldMap,
-  GraphQLInputField
+  GraphQLInputType,
+  GraphQLType,
+  isInputType
 } from "graphql";
 
 import {
@@ -51,7 +53,7 @@ import {
   Scalar,
   Typename
 } from "./intermediates";
-import { OptionalType, MaybeType, IfType, PartialType } from "./genericTypes";
+import { MaybeType, IfType, PartialType, OperationType } from "./genericTypes";
 import { isTSUnionType } from "@babel/types";
 
 export const typeReference = (name: string): TSTypeReference =>
@@ -72,7 +74,7 @@ export const typeForScalar = (scalar: Scalar): TSType => {
 export const typeForInputType = (type: InputType): TSType => {
   switch (type.kind) {
     case "Maybe":
-      return OptionalType(typeForInputType(type.ofType));
+      return MaybeType(typeForInputType(type.ofType));
     case "List":
       return TSArrayType(typeForInputType(type.ofType));
     case "InputObject":
@@ -193,7 +195,16 @@ export const enumDeclarationForGraphQLEnumType = (type: GraphQLEnumType) =>
     type.getValues().map(enumMemberForGraphQLEnumValue)
   );
 
-const propertySignatureForGraphQLInputField = (field: GraphQLInputField) => {
+const isInputField = (variable: {
+  name: string;
+  type: GraphQLType;
+}): variable is { name: string; type: GraphQLInputType } =>
+  isInputType(variable.type);
+
+const propertySignatureForGraphQLInputField = (field: {
+  name: string;
+  type: GraphQLInputType;
+}) => {
   const inputType = InputType(field.type);
   return {
     ...TSPropertySignature(
@@ -204,7 +215,7 @@ const propertySignatureForGraphQLInputField = (field: GraphQLInputField) => {
           : typeForInputType(inputType)
       )
     ),
-    optional: InputType(field.type).kind == "Maybe"
+    optional: inputType.kind == "Maybe"
   };
 };
 
@@ -220,6 +231,19 @@ export const typeAliasDeclarationForGraphQLInputObjectType = (
     typeForGraphQLInputFieldMap(type.getFields())
   );
 
+export const typeAliasDeclarationForOperationVariables = (
+  operation: Operation
+) =>
+  TSTypeAliasDeclaration(
+    identifier(operation.operationName + "Variables"),
+    undefined,
+    TSTypeLiteral(
+      operation.variables
+        .filter(isInputField)
+        .map(propertySignatureForGraphQLInputField)
+    )
+  );
+
 export const typeAliasDeclarationForFragment = (fragment: Fragment) =>
   TSTypeAliasDeclaration(
     identifier(fragment.fragmentName),
@@ -229,9 +253,21 @@ export const typeAliasDeclarationForFragment = (fragment: Fragment) =>
 
 export const typeAliasDeclarationForOperation = (operation: Operation) =>
   TSTypeAliasDeclaration(
-    identifier(operation.operationName),
+    identifier(operation.operationName + "Data"),
     undefined,
     typeForSelectionSet(operation.selectionSet)
+  );
+
+export const operationTypeAlias = (operation: Operation) =>
+  TSTypeAliasDeclaration(
+    identifier(operation.operationName),
+    undefined,
+    OperationType(
+      typeReference(operation.operationName + "Data"),
+      operation.variables.length > 0
+        ? typeReference(operation.operationName + "Variables")
+        : undefined
+    )
   );
 
 export const exportDeclaration = (expression: Declaration) =>

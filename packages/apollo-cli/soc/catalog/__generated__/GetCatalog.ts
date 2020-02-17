@@ -39,7 +39,7 @@ const getCatalogString = [
   sendableCardDetailsFragmentString
 ].join("\n\n");
 
-export type GetCatalog = {
+export type GetCatalogData = {
   firstReasonToSend: ReasonToSendFragment[];
   reasonsToSend: ReasonToSendFragment[];
   favoritedCards: MinimalSendableCardFragment[];
@@ -50,6 +50,9 @@ export type GetCatalog = {
   cardCategories: CardCategoryFragment[];
 };
 
-export const GetCatalog = (): Operation<GetCatalog> => ({
-  query: getCatalogString
+export type GetCatalog = Operation<GetCatalogData>;
+
+export const GetCatalog = (): GetCatalog => ({
+  query: getCatalogString,
+  variables: undefined
 });

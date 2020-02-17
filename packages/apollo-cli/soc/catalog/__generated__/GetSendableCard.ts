@@ -18,11 +18,22 @@ const getSendableCardString = [
   minimalSendableCardFragmentString
 ].join("\n\n");
 
-export type GetSendableCard = {
+export type GetSendableCardData = {
   sendableCard: Maybe<DetailedSendableCardFragment>;
 };
 
-export const GetSendableCard = (id: string): Operation<GetSendableCard> => ({
+export type GetSendableCardVariables = {
+  id: string;
+};
+
+export type GetSendableCard = Operation<
+  GetSendableCardData,
+  GetSendableCardVariables
+>;
+
+export const GetSendableCard = ({
+  id
+}: GetSendableCardVariables): GetSendableCard => ({
   query: getSendableCardString,
   variables: {
     id
