@@ -23,7 +23,7 @@ $ npm install -g @sendoutcards/apollo
 $ apollo COMMAND
 running command...
 $ apollo (-v|--version|version)
-@sendoutcards/apollo/1.7.24 darwin-x64 node-v12.4.0
+@sendoutcards/apollo/1.7.25 darwin-x64 node-v14.4.0
 $ apollo --help [COMMAND]
 USAGE
   $ apollo COMMAND
