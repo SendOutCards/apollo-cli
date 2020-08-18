@@ -15,6 +15,7 @@ import {
   extendedSelectionsAreEqual
 } from "./extendedIntermediates";
 import { Map, List, Set } from "immutable";
+import { isEqual } from "lodash";
 
 type NormalizableSelections = ByTypename<List<ExtendedFields>>;
 
@@ -81,13 +82,12 @@ const normalizeSelection = (
   selection: ExtendedSelection
 ): ExtendedSelection => ({
   kind: "InlineSelection",
-  fields: selection.fields.map(
-    fields =>
-      isNormalizable(fields)
-        ? fields.filter(
-            (_, fieldName) => fieldName == "__typename" || fieldName == "id"
-          )
-        : fields.map(normalizeField)
+  fields: selection.fields.map(fields =>
+    isNormalizable(fields)
+      ? fields.filter(
+          (_, fieldName) => fieldName == "__typename" || fieldName == "id"
+        )
+      : fields.map(normalizeField)
   )
 });
 
@@ -118,7 +118,7 @@ const returnIfEqual = (
       if (lhs.name != rhs.name) {
         throw Error(`${lhs.name} is different than ${rhs.name}`);
       }
-      if (lhs.values != rhs.values) {
+      if (!isEqual(lhs.values, rhs.values)) {
         throw Error(
           `Possible values ${lhs.values} are not the same as ${rhs.values}`
         );
@@ -197,11 +197,10 @@ const mergeFields = (__typename: string) => (
   const intersection = Set(lhs.keySeq()).intersect(Set(rhs.keySeq()));
   return lhs
     .mergeWith(mergeField(__typename), rhs)
-    .map(
-      (field, fieldName) =>
-        !intersection.contains(fieldName)
-          ? { type: field.type, optional: true }
-          : field
+    .map((field, fieldName) =>
+      !intersection.contains(fieldName)
+        ? { type: field.type, optional: true }
+        : field
     );
 };
 
